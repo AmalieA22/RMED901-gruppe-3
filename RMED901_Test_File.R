@@ -9,4 +9,9 @@ crit_dmg_Pal
 
 ok
 
-a<-4
+a <- 4
+
+e <- 2
+
+a*e
+
