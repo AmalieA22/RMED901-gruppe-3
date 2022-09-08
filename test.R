@@ -3,4 +3,4 @@
 
 #WOOWO IT WORKS
 
-2020*2
+abc <- (2020*2)/2
