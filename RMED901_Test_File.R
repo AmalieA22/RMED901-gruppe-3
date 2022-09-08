@@ -8,3 +8,5 @@ crit_dmg_Pal <- sum(3*d8)
 crit_dmg_Pal
 
 ok
+
+a<-4
