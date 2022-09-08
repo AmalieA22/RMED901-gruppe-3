@@ -3,4 +3,6 @@
 
 #WOOWO IT WORKS
 
-abc <- (2020*2)/2
+abc <- sum((2020*2)/2+2*rnorm(1))
+
+abc
