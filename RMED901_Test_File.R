@@ -10,3 +10,6 @@ crit_dmg_Pal
 ok
 
 a<-4
+b<-6
+z<-a*b
+z
