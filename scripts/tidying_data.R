@@ -5,9 +5,13 @@
 # Description: A script for tidying the exam dataset
 #------------------------------#
 
+
+#Loading and reading a copy version of the data
+
 library(tidyverse)
 library(here)
 
-data_nontidy <- read.delim(here("data", "exam_nontidy.txt"))
+
+data_nontidy <- read.delim(here("data", "copy_exam_nontidy.txt"))
 
 data_nontidy
