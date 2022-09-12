@@ -19,17 +19,23 @@ data_nontidy
 #Exploring the data
 head(data_nontidy)
 tail(data_nontidy)
+#Head() and tail() show that gender.age is in 1 column: they should be in 2
+#No columns have numbers in the start or contain spaces
 
 summary(data_nontidy)
+#Age is a character
 
 glimpse(data_nontidy)
+#There are 15 columns and 34,048 rows in this dataset
+#There are some NA in the dataset, for example in payor_group and patient_class
 
 skimr::skim(data_nontidy)
+#There is 15527 NA for payor_group and 15506 NA for patient_class
+#There are 12344 unique values for subject, which may indicate that there are variables that lead to multiple observations
+#This shows that time.measurement should be 2 variables: col_rec_tat and rec_ver_tat
 
 naniar::gg_miss_var(data_nontidy)
-
-
-
+#The plot shows that we are missing more than 15 000 values in payor_group and patient_class, and around 400 in ct_result
 
 
 #Tidying the data
