@@ -39,3 +39,10 @@ naniar::gg_miss_var(data_nontidy)
 
 
 #Tidying the data
+
+#Separating age and gender into 2 columns
+data_nontidy %>%
+  separate(col = gender.age,
+           into = c("gender", "age"),
+           sep = "-")
+
