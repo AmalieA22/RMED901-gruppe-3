@@ -46,3 +46,10 @@ data_nontidy %>%
            into = c("gender", "age"),
            sep = "-")
 
+#Widening time.measurement to rec_ver_tat and col_rec_tat
+data_nontidy %>%
+  distinct() %>%
+  pivot_wider(names_from = "time.measurement", values_from = ".value")
+
+#When first running the code without distinct, there would be a warning message since there were a lot of duplicates.
+#Distinct() selected only unique/distinct rows from the dataframe. It is now 152 524 rows and 15 columns.
