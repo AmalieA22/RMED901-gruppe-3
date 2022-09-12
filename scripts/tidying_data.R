@@ -51,5 +51,13 @@ data_nontidy %>%
   distinct() %>%
   pivot_wider(names_from = "time.measurement", values_from = ".value")
 
+#rename
+data_nontidy<-
+  data_nontidy %>% 
+  rename(value=.value,
+         pan_day=pan.day,
+         time_measurment=time.measurement)
+data_nontidy
+
 #When first running the code without distinct, there would be a warning message since there were a lot of duplicates.
 #Distinct() selected only unique/distinct rows from the dataframe. It is now 152 524 rows and 15 columns.
