@@ -1,0 +1,5 @@
+To-do tidy:
+-Separate gender.age - Amalie
+-Widen time.measurement to rec_ver_tat and col_rec_tat with values from values - Andrew
+-rename all columns to not includes spaces or "." -Ghazal
+-merge and summarize/explore new data -Ariell/together
