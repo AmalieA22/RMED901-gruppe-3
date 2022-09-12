@@ -51,7 +51,7 @@ data_nontidy %>%
   distinct() %>%
   pivot_wider(names_from = "time.measurement", values_from = ".value")
 
-#rename
+#renaming all columns to not include space or "."
 data_nontidy<-
   data_nontidy %>% 
   rename(value=.value,
