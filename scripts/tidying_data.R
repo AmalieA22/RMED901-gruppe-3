@@ -68,4 +68,8 @@ data_tidy <-
 
 data_tidy
 glimpse(data_tidy)
+
+#Wrote code for arranging the variables correctly
+data_tidy %>%
+  select(c(ID, age, gender), everything())
   
