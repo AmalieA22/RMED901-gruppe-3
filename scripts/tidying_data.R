@@ -51,7 +51,7 @@ data_tidy<-
            into = c("gender", "age"),
            sep = "-")%>%
   separate(col = subject,
-           into = c("ID", "first_name", "last_name"),
+           into = c("id", "first_name", "last_name"),
            sep = " ") %>%
     distinct() %>%
       pivot_wider(names_from = "time measurement", values_from = "value")
@@ -65,7 +65,7 @@ data_tidy <-
          pan_day = as.numeric(pan_day),
          drive_thru_ind = as.numeric(drive_thru_ind),
          ct_result = as.numeric(ct_result),
-         ID = as.numeric(ID))
+         id = as.numeric(id))
 
 data_tidy
 glimpse(data_tidy)
@@ -83,8 +83,8 @@ data_tidy <-
 #Wrote code for arranging the variables correctly and to arrange the table according to ID
 data_tidy <-
   data_tidy %>%
-  select(c(ID, age, gender), everything()) %>%
-  arrange(ID)
+  select(c(id, age, gender), everything()) %>%
+  arrange(id)
 
 
 
@@ -95,3 +95,12 @@ data_tidy %>%
 #New column showing drive_thru_ind as Yes/No
 data_tidy %>%
   mutate(drive_thru_ind = if_else(drive_thru_ind == 1, "Yes", "No"))
+
+#Code to join data to the tidy data
+data_join <- read.delim(here("data", "copy_exam_joindata.txt"))
+
+data_joined <- 
+  data_tidy %>%
+  inner_join(data_join)
+
+glimpse(data_joined)
