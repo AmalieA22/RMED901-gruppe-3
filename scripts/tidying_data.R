@@ -77,4 +77,4 @@ data_tidy <-
   arrange(ID)
 
 #Wrote code to arrange the table according to ID
-data_tidy
+data_join <-
