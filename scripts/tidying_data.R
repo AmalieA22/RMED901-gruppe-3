@@ -95,3 +95,17 @@ data_tidy %>%
 #New column showing drive_thru_ind as Yes/No
 data_tidy %>%
   mutate(drive_thru_ind = if_else(drive_thru_ind == 1, "Yes", "No"))
+
+#First: checking if there are any missing values in age
+data_tidy %>%
+  filter(is.na(age))%>%
+  count(age)
+#Returns no missing values
+
+#Stratifying data only for persons testet pan_day later than 50. 
+#Here I have chosen age as the numeric column to check min, max, mean and sd
+data_tidy %>%
+  group_by(pan_day > 50) %>%
+  summarise(min(age), max(age), mean(age), sd(age))
+
+            
