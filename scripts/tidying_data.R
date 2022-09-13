@@ -64,7 +64,7 @@ data_tidy <-
   mutate(age = as.numeric(age),
          pan_day = as.numeric(pan_day),
          drive_thru_ind = as.numeric(drive_thru_ind),
-         ct_results = as.numeric(ct_result),
+         ct_result = as.numeric(ct_result),
          ID = as.numeric(ID))
 
 data_tidy
