@@ -12,7 +12,7 @@ library(tidyverse)
 library(here)
 
 
-data_nontidy <- read.delim(here("data", "copy_exam_nontidy.txt"))
+data_nontidy <- read_delim(here("data", "copy_exam_nontidy.txt"))
 
 data_nontidy
 
