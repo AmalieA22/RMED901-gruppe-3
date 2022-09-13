@@ -46,15 +46,15 @@ naniar::gg_miss_var(data_nontidy)
 data_tidy<-
   data_nontidy %>%
     rename(value=.value,
-         pan_day=pan.day)%>%
-    separate(col = gender.age,
+         pan_day="pan day")%>%
+    separate(col = "gender-age",
            into = c("gender", "age"),
            sep = "-")%>%
   separate(col = subject,
            into = c("ID", "first_name", "last_name"),
            sep = " ") %>%
     distinct() %>%
-      pivot_wider(names_from = "time.measurement", values_from = "value")
+      pivot_wider(names_from = "time measurement", values_from = "value")
 #When first running the code without distinct, there would be a warning message since there were a lot of duplicates.
 #Distinct() selected only unique/distinct rows from the dataframe. It is now 152 524 rows and 15 columns.
 
