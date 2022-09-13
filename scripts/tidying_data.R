@@ -93,12 +93,12 @@ data_tidy %>%
 
 #Stratify your data by a categorical column and report min, max, mean and sd of a numeric column.
 data_tidy %>% 
-  summarize(max(age, na.rm = T), min(age, na.rm = T), mean(age, na.rm = T), sd(age, na.rm = T))
+  summarize(min(age, na.rm = T),max(age, na.rm = T),mean(age, na.rm = T), sd(age, na.rm = T))
 
 #Stratify your data by a categorical column and report min, max, mean and sd of a numeric column for a defined set of observations - use pipe!
 #Only for persons with ct_result == 45
 data_tidy %>%
   filter(ct_result==45) %>% 
-  summarize(max(pan_day, na.rm = T), min(pan_day, na.rm = T), mean(pan_day, na.rm = T), sd(pan_day, na.rm = T))
+  summarize(min(pan_day, na.rm = T), max(pan_day, na.rm = T), mean(pan_day, na.rm = T), sd(pan_day, na.rm = T))
 
 
