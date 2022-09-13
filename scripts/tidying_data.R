@@ -96,6 +96,10 @@ data_tidy %>%
 data_tidy %>%
   mutate(drive_thru_ind = if_else(drive_thru_ind == 1, "Yes", "No"))
 
+
+#TASK: STRATIFY DATA BY A CATEGORICAL COLUMN AND REPORT MIN, MAX, MEAN AND SD OF 
+#A NUMERIC COLUMN FOR A DEFINED SET OF OBSERVATIONS - ONLY FOR PERSONS TESTED PAN_DAY LATER THAN 50
+
 #First: checking if there are any missing values in age
 data_tidy %>%
   filter(is.na(age))%>%
