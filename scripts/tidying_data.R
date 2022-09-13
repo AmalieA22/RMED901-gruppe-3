@@ -69,22 +69,6 @@ data_tidy <-
 
 data_tidy
 glimpse(data_tidy)
-<<<<<<< HEAD
-
-
-
-
-
-
-
-
-
-
-
-=======
-  
->>>>>>> 91392ed4a0f00ec1dce55e8b71b40a83ac762b11
-
 
 #A column showing whether rec_ver_tat is higher than 100 or not: values High/Low
 data_tidy <-
