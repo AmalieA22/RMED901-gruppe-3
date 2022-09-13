@@ -76,7 +76,8 @@ data_tidy <-
   mutate(rec_ver_tat= if_else(rec_ver_tat>=100, "High", "Low"))
 
 #A numeric column showing pan_day in weeks
-
+data_tidy %>% 
+  mutate(pan_weeks = pan_day / 7)
 
 #Wrote code for arranging the variables correctly
 data_tidy <-
