@@ -12,7 +12,7 @@ library(tidyverse)
 library(here)
 
 
-data_nontidy <- read.delim(here("data", "copy_exam_nontidy.txt"))
+data_nontidy <- read_delim(here("data", "copy_exam_nontidy.txt"))
 
 data_nontidy
 
@@ -46,14 +46,22 @@ naniar::gg_miss_var(data_nontidy)
 data_tidy<-
   data_nontidy %>%
     rename(value=.value,
-         pan_day=pan.day)%>%
-    separate(col = gender.age,
+         pan_day="pan day")%>%
+    separate(col = "gender-age",
            into = c("gender", "age"),
            sep = "-")%>%
     distinct() %>%
-      pivot_wider(names_from = "time.measurement", values_from = "value")
+      pivot_wider(names_from = "time measurement", values_from = "value")
 #When first running the code without distinct, there would be a warning message since there were a lot of duplicates.
 #Distinct() selected only unique/distinct rows from the dataframe. It is now 152 524 rows and 15 columns.
 
+#Changing the age column to numeric
+data_tidy <-
+  data_tidy %>%
+  mutate(age = as.numeric(age))
+
 data_tidy
 glimpse(data_tidy)
+
+data_tidy %>% 
+select(-row,-"1_test_id", -demo_group)
