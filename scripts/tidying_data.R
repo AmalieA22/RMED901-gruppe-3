@@ -41,8 +41,8 @@ naniar::gg_miss_var(data_nontidy)
 #Tidying the data
 
 #We wrote a pipe that renames columns to not include space or "."
-#Separating age and gender into 2 columns
-#Widening time.measurement to rec_ver_tat and col_rec_tat
+#Separates age and gender into 2 columns
+#Widens time.measurement to rec_ver_tat and col_rec_tat
 data_tidy<-
   data_nontidy %>%
     rename(value=.value,
