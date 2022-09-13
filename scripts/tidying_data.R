@@ -58,13 +58,14 @@ data_tidy<-
 #When first running the code without distinct, there would be a warning message since there were a lot of duplicates.
 #Distinct() selected only unique/distinct rows from the dataframe. It is now 152 524 rows and 15 columns.
 
-#Changing the type of variables for age, pan_day, drive_thru_ind and ct_result to numeric
+#Changing the type of variables for age, pan_day, drive_thru_ind, ct_result and ID to numeric
 data_tidy <-
   data_tidy %>%
   mutate(age = as.numeric(age),
          pan_day = as.numeric(pan_day),
          drive_thru_ind = as.numeric(drive_thru_ind),
-         ct_results = as.numeric(ct_result))
+         ct_results = as.numeric(ct_result),
+         ID = as.numeric(ID))
 
 data_tidy
 glimpse(data_tidy)
