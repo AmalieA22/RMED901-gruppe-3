@@ -55,5 +55,10 @@ data_tidy<-
 #When first running the code without distinct, there would be a warning message since there were a lot of duplicates.
 #Distinct() selected only unique/distinct rows from the dataframe. It is now 152 524 rows and 15 columns.
 
+#Changing the age column to numeric
+data_tidy <-
+  data_tidy %>%
+  mutate(age = as.numeric(age))
+
 data_tidy
 glimpse(data_tidy)
