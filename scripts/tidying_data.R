@@ -80,16 +80,18 @@ data_tidy <-
   mutate(rec_ver_tat= if_else(rec_ver_tat>=100, "High", "Low"))
 
 
-#Wrote code for arranging the variables correctly
+#Wrote code for arranging the variables correctly and to arrange the table according to ID
 data_tidy <-
   data_tidy %>%
   select(c(ID, age, gender), everything()) %>%
   arrange(ID)
 
-#Wrote code to arrange the table according to ID
-<<<<<<< HEAD
-data_join <-
-=======
+
+
+#New numeric column showing multiplication of ct_result and orderset for each person
 data_tidy %>%
-  arrange(ID)
->>>>>>> ae047755aa0c86d5f4dd5dba6ef86cbe943957cf
+  mutate(ct_order_result = ct_result * orderset)
+
+#New column showing drive_thru_ind as Yes/No
+data_tidy %>%
+  mutate(drive_thru_ind = if_else(drive_thru_ind == 1, "Yes", "No"))
