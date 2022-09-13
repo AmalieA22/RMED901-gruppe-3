@@ -76,8 +76,10 @@ data_tidy <-
   mutate(rec_ver_tat= if_else(rec_ver_tat>=100, "High", "Low"))
 
 #A numeric column showing pan_day in weeks
-data_tidy %>% 
+data_tidy<-
+  data_tidy %>% 
   mutate(pan_weeks = pan_day / 7)
+glimpse(data_tidy)
 
 #Wrote code for arranging the variables correctly
 data_tidy <-
@@ -87,3 +89,16 @@ data_tidy <-
 #Wrote code to arrange the table according to ID
 data_tidy %>%
   arrange(ID)
+
+
+#Stratify your data by a categorical column and report min, max, mean and sd of a numeric column.
+data_tidy %>% 
+  summarize(max(age, na.rm = T), min(age, na.rm = T), mean(age, na.rm = T), sd(age, na.rm = T))
+
+#Stratify your data by a categorical column and report min, max, mean and sd of a numeric column for a defined set of observations - use pipe!
+#Only for persons with ct_result == 45
+data_tidy %>%
+  filter(ct_result==45) %>% 
+  summarize(max(pan_day, na.rm = T), min(pan_day, na.rm = T), mean(pan_day, na.rm = T), sd(pan_day, na.rm = T))
+
+
