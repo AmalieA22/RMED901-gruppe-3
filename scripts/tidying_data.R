@@ -41,7 +41,7 @@ naniar::gg_miss_var(data_nontidy)
 #Tidying the data
 
 #We wrote a pipe that renames columns to not include space or "."
-#Separates age and gender into 2 columns
+#Separates age and gender into 2 columns and subject into "ID", "first name" and "surname"
 #Widens time.measurement to rec_ver_tat and col_rec_tat
 data_tidy<-
   data_nontidy %>%
@@ -50,6 +50,9 @@ data_tidy<-
     separate(col = gender.age,
            into = c("gender", "age"),
            sep = "-")%>%
+  separate(col = subject,
+           into = c("ID", "first_name", "last_name"),
+           sep = " ") %>%
     distinct() %>%
       pivot_wider(names_from = "time.measurement", values_from = "value")
 #When first running the code without distinct, there would be a warning message since there were a lot of duplicates.
@@ -65,8 +68,4 @@ data_tidy <-
 
 data_tidy
 glimpse(data_tidy)
-
-data_nontidy %>%
-  separate(col = subject,
-           into = c("ID", "first_name", "last_name"),
-           sep = " ")
+  
