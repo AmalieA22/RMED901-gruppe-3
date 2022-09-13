@@ -73,8 +73,8 @@ glimpse(data_tidy)
 #Wrote code for arranging the variables correctly
 data_tidy <-
   data_tidy %>%
-  select(c(ID, age, gender), everything())
+  select(c(ID, age, gender), everything()) %>%
+  arrange(ID)
 
 #Wrote code to arrange the table according to ID
-data_tidy %>%
-  arrange(ID)
+data_tidy
