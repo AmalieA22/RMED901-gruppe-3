@@ -1,5 +1,13 @@
-To-do tidy:
+To-do day 5:
 -Separate gender.age - Amalie
 -Widen time.measurement to rec_ver_tat and col_rec_tat with values from values - Andrew
 -rename all columns to not includes spaces or "." -Ghazal
 -merge and summarize/explore new data -Ariell/together
+
+To-do day 6:
+-Remove unnecessary columns from your dataframe (the lists of required columns are provided for each dataset) -Ariell
+-Make necessary changes in variable types - Amalie
+-Create a set of new columns (required changes are provided for each dataset) -Amalie Ghazal
+-Set the order of columns as required (see the instructions for your dataset). -André
+-Arrange id column of your dataset in order of increasing number or alphabetically. -André
+-Read and join the additional dataset to your main dataset. - André
