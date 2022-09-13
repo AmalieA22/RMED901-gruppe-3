@@ -62,3 +62,8 @@ data_tidy <-
 
 data_tidy
 glimpse(data_tidy)
+
+data_nontidy %>%
+  separate(col = subject,
+           into = c("ID", "first_name", "last_name"),
+           sep = " ")
