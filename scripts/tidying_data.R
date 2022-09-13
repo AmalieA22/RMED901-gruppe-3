@@ -113,4 +113,7 @@ data_joined %>%
   head()
 #There are no such individuals
 
-#
+#Code to make a table from 2 categorical columns
+gender_payor_table <- 
+  data_joined %>%
+  with(table(gender, payor_group))
