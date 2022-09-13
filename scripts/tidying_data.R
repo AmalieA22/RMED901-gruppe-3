@@ -74,6 +74,12 @@ glimpse(data_tidy)
 data_tidy %>% 
 select(-row,-"1_test_id", -demo_group)
 
+#A column showing whether rec_ver_tat is higher than 100 or not: values High/Low
+data_tidy <-
+  data_tidy %>%
+  mutate(rec_ver_tat= if_else(rec_ver_tat>=100, "High", "Low"))
+
+
 #Wrote code for arranging the variables correctly
 data_tidy <-
   data_tidy %>%
@@ -82,4 +88,3 @@ data_tidy <-
 #Wrote code to arrange the table according to ID
 data_tidy %>%
   arrange(ID)
-
