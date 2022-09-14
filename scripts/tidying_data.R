@@ -123,7 +123,7 @@ data_wrangled <-
   mutate(ct_order_result = ct_result * orderset) %>% 
   select(c(id, age, gender), everything()) %>%
   arrange(id) %>% 
-  inner_join(data_join)
+  left_join(data_join)
 
 glimpse(data_wrangled)
 
@@ -191,5 +191,9 @@ gender_payor_table <-
   data_wrangled %>%
   with(table(gender, payor_group))
 
+
+#3: Were there more females than males that took the test at a drive through?
+ggplot(data_wrangled, aes(x = gender, y = drive_thru_ind))+
+  geom_col(width = 0.5, fill = "lightblue")
 
 
