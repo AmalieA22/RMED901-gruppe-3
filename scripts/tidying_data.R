@@ -212,6 +212,8 @@ ggplot(data = count_gender,
   geom_col(aes(fill = gender)) +
   scale_fill_brewer(type = "div", palette ="BuPu") +
   theme_classic()
+#The visualization shows that a few more women got tested, but the difference
+#is relatively small
 
 #Plot to illustrate if time spent waiting for test reuslts improves 
 #over the course of the pandemic
