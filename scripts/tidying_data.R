@@ -81,8 +81,10 @@ data_tidy <-
   mutate(rec_ver_tat= if_else(rec_ver_tat>=100, "High", "Low"))
 
 #A numeric column showing pan_day in weeks
-data_tidy %>% 
+data_tidy<-
+  data_tidy %>% 
   mutate(pan_weeks = pan_day / 7)
+glimpse(data_tidy)
 
 #Wrote code for arranging the variables correctly and to arrange the table according to ID
 data_tidy <-
@@ -102,6 +104,7 @@ data_tidy <-
   
 #Code to join data to the tidy data
 data_join <- read.delim(here("data", "copy_exam_joindata.txt"))
+
 
 data_joined <- 
   data_tidy %>%
@@ -171,7 +174,14 @@ data_wrangled %>%
 
 
 #STRATIFY DATA by a categorical column and report min, max, mean and sd of a numeric column
+data_wrangled %>% 
+  summarize(min(age, na.rm = T),max(age, na.rm = T),mean(age, na.rm = T), sd(age, na.rm = T))
 
+#Only for persons with ct_result == 45
+data_wrangled %>%
+  filter(ct_result==45) %>% 
+  summarize(min(pan_day, na.rm = T), max(pan_day, na.rm = T), mean(pan_day, na.rm = T), sd(pan_day, na.rm = T))
+  
 #Only for persons tested pan_day later than 50
 #Here I have chosen age as the numeric column to check min, max, mean and sd
 data_wrangled %>%
@@ -190,6 +200,4 @@ data_wrangled %>%
 gender_payor_table <- 
   data_wrangled %>%
   with(table(gender, payor_group))
-
-
 
