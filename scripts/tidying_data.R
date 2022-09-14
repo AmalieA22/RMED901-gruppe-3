@@ -16,7 +16,7 @@ data_nontidy <- read_delim(here("data", "copy_exam_nontidy.txt"))
 
 data_nontidy
 
-#Exploring the data
+#EXPLORING THE DATA
 head(data_nontidy)
 tail(data_nontidy)
 #Head() and tail() show that gender.age is in 1 column: they should be in 2
@@ -38,7 +38,7 @@ naniar::gg_miss_var(data_nontidy)
 #The plot shows that we are missing more than 15 000 values in payor_group and patient_class, and around 400 in ct_result
 
 
-#Tidying the data
+#TIDYING THE DATA
 
 #We wrote a pipe that renames columns to not include space or "."
 #Separates age and gender into 2 columns and subject into "ID", "first name" and "surname"
@@ -101,7 +101,7 @@ data_tidy <-
 data_tidy <- 
   data_tidy %>%
   mutate(drive_thru_ind = if_else(drive_thru_ind == 1, "Yes", "No"))
-
+  
 #Code to join data to the tidy data
 data_join <- read.delim(here("data", "copy_exam_joindata.txt"))
 
@@ -110,7 +110,7 @@ data_joined <-
   data_tidy %>%
   inner_join(data_join)
 
-#Creating a pipeline for day 6
+#CREATING A PIPELINE for day 6
 
 data_wrangled <- 
   data_tidy %>% 
@@ -128,27 +128,76 @@ data_wrangled <-
   arrange(id) %>% 
   inner_join(data_join)
 
-glimpse(data_joined)
+glimpse(data_wrangled)
 
-#Stratify data_joined by drive_trhu_ind == 0 and ct_result < 35
-data_joined %>%
-  filter(drive_thru_ind == "No" & ct_result < 35) %>%
-  head()
-#There are no such individuals
+#EXPLORING MISSING DATA
+naniar::gg_miss_var(data_wrangled)
+#This returns more than 8000 missing values for payor_group and patient_class, and <500 for ct_result
+#Further exploring missing values in payor_group, patient_class and ct_result
+data_wrangled %>%
+  filter(is.na(payor_group))%>%
+    count(payor_group)
 
-#Code to make a table from 2 categorical columns
-gender_payor_table <- 
-  data_joined %>%
-  with(table(gender, payor_group))
+data_wrangled %>%  
+  filter(is.na(patient_class))%>%
+    count(patient_class)
   
-  
-#Stratify your data by a categorical column and report min, max, mean and sd of a numeric column.
+data_wrangled %>%
+  filter(is.na(ct_result))%>%
+    count(ct_result)
+#Payor_group returns 7087 NA, patient class returns 7077 NA and ct_result returns 209 NA
+#When looking at the dataset, it seems like the patient who tested for covid in a clinical lab does not have any data on payor group or patient class.
+
+data_wrangled %>%
+  filter(clinic_name == "clinical lab") %>%
+    filter(is.na(payor_group)) %>%
+      count(payor_group)
+
+data_wrangled %>%
+  filter(clinic_name == "line clinical lab-") %>%
+    filter(is.na(payor_group)) %>%
+      count(payor_group)
+
+data_wrangled %>%
+  filter(clinic_name == "clinical lab") %>%
+    filter(is.na(patient_class)) %>%
+      count(patient_class)
+
+data_wrangled %>%
+  filter(clinic_name == "line clinical lab-") %>%
+  filter(is.na(patient_class)) %>%
+  count(patient_class)
+
+#Clincal lab: This returns 6407 NA for payor_group and 6406 NA for patient class.
+#Line clinical lab: 218 NA for payor_group, 218 NA for patient_class
+#The majority of the missing values are therefore connected to the fact that some are tested in a clinical lab
+
+
+#STRATIFY DATA by a categorical column and report min, max, mean and sd of a numeric column
 data_wrangled %>% 
   summarize(min(age, na.rm = T),max(age, na.rm = T),mean(age, na.rm = T), sd(age, na.rm = T))
 
-#Stratify your data by a categorical column and report min, max, mean and sd of a numeric column for a defined set of observations - use pipe!
 #Only for persons with ct_result == 45
 data_wrangled %>%
   filter(ct_result==45) %>% 
   summarize(min(pan_day, na.rm = T), max(pan_day, na.rm = T), mean(pan_day, na.rm = T), sd(pan_day, na.rm = T))
+  
+#Only for persons tested pan_day later than 50
+#Here I have chosen age as the numeric column to check min, max, mean and sd
+data_wrangled %>%
+  group_by(pan_day > 50) %>%
+  summarise(min(age), max(age), mean(age), sd(age))
+  
+#Only for drive_trhu_ind == 0 and ct_result < 35
+data_wrangled %>%
+  filter(drive_thru_ind == "No" & ct_result < 35) %>%
+  head()
+#There are no such individuals
+
+
+
+#Code to make a table from 2 categorical columns
+gender_payor_table <- 
+  data_wrangled %>%
+  with(table(gender, payor_group))
 
