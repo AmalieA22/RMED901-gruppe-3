@@ -126,9 +126,7 @@ data_wrangled <-
   mutate(ct_order_result = ct_result * orderset) %>% 
   select(c(id, age, gender), everything()) %>%
   arrange(id) %>% 
-  inner_join(data_join)
-
-glimpse(data_wrangled)
+  left_join(data_join)
 
 #EXPLORING MISSING DATA
 naniar::gg_miss_var(data_wrangled)
@@ -190,7 +188,7 @@ data_wrangled %>%
   
 #Only for drive_trhu_ind == 0 and ct_result < 35
 data_wrangled %>%
-  filter(drive_thru_ind == "No" & ct_result < 35) %>%
+  filter(drive_thru_ind == "No"& ct_result < 35) %>%
   head()
 #There are no such individuals
 
