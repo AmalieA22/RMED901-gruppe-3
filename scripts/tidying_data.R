@@ -193,7 +193,12 @@ gender_payor_table <-
 
 
 #3: Were there more females than males that took the test at a drive through?
+
 ggplot(data_wrangled, aes(x = gender, y = drive_thru_ind))+
-  geom_col(width = 0.5, fill = "lightblue")
+  geom_col(width = 0.5, position = position_dodge(0.6), fill = "lightgreen")+
+  xlab("Gender")+
+  ylab("Took the test at a drive-through")
+
+  
 
 
