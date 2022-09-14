@@ -70,44 +70,15 @@ data_tidy <-
 data_tidy
 glimpse(data_tidy)
 
-
-data_tidy <-
-  data_tidy %>% 
-  select(-row,-"1_test_id", -demo_group)
-
-#A column showing whether rec_ver_tat is higher than 100 or not: values High/Low
-data_tidy <-
-  data_tidy %>%
-  mutate(rec_ver_tat= if_else(rec_ver_tat>=100, "High", "Low"))
-
+#A pipe wrangling the data by:
+#Removing row, 1_test_id and demo_group columns
+#Adding a column showing whether rec_ver_tat is higher than 100 or not: values High/Low
 #A numeric column showing pan_day in weeks
-data_tidy %>% 
-  mutate(pan_weeks = pan_day / 7)
-
-#Wrote code for arranging the variables correctly and to arrange the table according to ID
-data_tidy <-
-  data_tidy %>%
-  select(c(id, age, gender), everything()) %>%
-  arrange(id)
-
+#Arranging the columns correctly and to arrange the table according to ID
 #New numeric column showing multiplication of ct_result and orderset for each person
-data_tidy <- 
-  data_tidy %>%
-  mutate(ct_order_result = ct_result * orderset)
-
 #New column showing drive_thru_ind as Yes/No
-data_tidy <- 
-  data_tidy %>%
-  mutate(drive_thru_ind = if_else(drive_thru_ind == 1, "Yes", "No"))
-
 #Code to join data to the tidy data
 data_join <- read.delim(here("data", "copy_exam_joindata.txt"))
-
-data_joined <- 
-  data_tidy %>%
-  inner_join(data_join)
-
-#Creating a pipeline for day 6
 
 data_wrangled <- 
   data_tidy %>% 
@@ -125,15 +96,15 @@ data_wrangled <-
   arrange(id) %>% 
   inner_join(data_join)
 
-glimpse(data_joined)
+glimpse(data_wrangled)
 
 #Stratify data_joined by drive_trhu_ind == 0 and ct_result < 35
-data_joined %>%
+data_wrangled %>%
   filter(drive_thru_ind == "No" & ct_result < 35) %>%
   head()
 #There are no such individuals
 
 #Code to make a table from 2 categorical columns
 gender_payor_table <- 
-  data_joined %>%
+  data_wrangled %>%
   with(table(gender, payor_group))
