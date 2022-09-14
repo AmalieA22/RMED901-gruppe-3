@@ -70,6 +70,9 @@ data_tidy <-
 data_tidy
 glimpse(data_tidy)
 
+data_join <- read.delim(here("data", "copy_exam_joindata.txt"))
+
+
 #A pipe wrangling the data by:
 #Removing row, 1_test_id and demo_group columns
 #Adding a column showing whether rec_ver_tat is higher than 100 or not: values High/Low
@@ -78,7 +81,6 @@ glimpse(data_tidy)
 #New numeric column showing multiplication of ct_result and orderset for each person
 #New column showing drive_thru_ind as Yes/No
 #Code to join data to the tidy data
-data_join <- read.delim(here("data", "copy_exam_joindata.txt"))
 
 data_wrangled <- 
   data_tidy %>% 
