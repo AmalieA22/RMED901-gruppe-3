@@ -142,7 +142,7 @@ gender_payor_table <-
   with(table(gender, payor_group))
   
   
- #Stratify your data by a categorical column and report min, max, mean and sd of a numeric column.
+#Stratify your data by a categorical column and report min, max, mean and sd of a numeric column.
 data_wrangled %>% 
   summarize(min(age, na.rm = T),max(age, na.rm = T),mean(age, na.rm = T), sd(age, na.rm = T))
 
