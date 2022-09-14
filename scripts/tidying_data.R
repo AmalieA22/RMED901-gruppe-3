@@ -70,6 +70,7 @@ data_tidy <-
 data_tidy
 glimpse(data_tidy)
 
+
 data_tidy <-
   data_tidy %>% 
   select(-row,-"1_test_id", -demo_group)
@@ -79,14 +80,15 @@ data_tidy <-
   data_tidy %>%
   mutate(rec_ver_tat= if_else(rec_ver_tat>=100, "High", "Low"))
 
+#A numeric column showing pan_day in weeks
+data_tidy %>% 
+  mutate(pan_weeks = pan_day / 7)
 
 #Wrote code for arranging the variables correctly and to arrange the table according to ID
 data_tidy <-
   data_tidy %>%
   select(c(id, age, gender), everything()) %>%
   arrange(id)
-
-
 
 #New numeric column showing multiplication of ct_result and orderset for each person
 data_tidy <- 
