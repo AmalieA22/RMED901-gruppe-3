@@ -107,6 +107,24 @@ data_joined <-
   data_tidy %>%
   inner_join(data_join)
 
+#Creating a pipeline for day 6
+
+data_wrangled <- 
+  data_tidy %>% 
+  select(-row,-"1_test_id", -demo_group) %>% 
+  mutate(age = as.numeric(age),
+         pan_day = as.numeric(pan_day),
+         drive_thru_ind = as.numeric(drive_thru_ind),
+         ct_result = as.numeric(ct_result),
+         id = as.numeric(id)) %>% 
+  mutate(rec_ver_tat= if_else(rec_ver_tat>=100, "High", "Low")) %>% 
+  mutate(pan_weeks = pan_day / 7) %>% 
+  mutate(drive_thru_ind = if_else(drive_thru_ind == 1, "Yes", "No")) %>% 
+  mutate(ct_order_result = ct_result * orderset) %>% 
+  select(c(id, age, gender), everything()) %>%
+  arrange(id) %>% 
+  inner_join(data_join)
+
 glimpse(data_joined)
 
 #Stratify data_joined by drive_trhu_ind == 0 and ct_result < 35
