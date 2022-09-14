@@ -128,6 +128,8 @@ data_wrangled <-
   arrange(id) %>% 
   left_join(data_join)
 
+glimpse(data_wrangled)
+
 #EXPLORING MISSING DATA
 naniar::gg_miss_var(data_wrangled)
 #This returns more than 8000 missing values for payor_group and patient_class, and <500 for ct_result
@@ -199,3 +201,18 @@ gender_payor_table <-
   data_wrangled %>%
   with(table(gender, payor_group))
 
+#Plot to illustrate sex differences in testing
+count_gender <- 
+  data_wrangled %>%
+  count(gender)
+ggplot(data = count_gender, 
+       aes(x = gender, 
+           y = n)) +
+  geom_col()
+
+#Plot to illustrate if time spent waiting for test reuslts improves 
+#over the course of the pandemic
+ggplot(data = data_wrangled,
+       aes(x = col_rec_tat ,
+           y = pan_weeks)) +
+  geom_point()
