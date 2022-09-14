@@ -97,8 +97,50 @@ data_tidy %>%
   mutate(drive_thru_ind = if_else(drive_thru_ind == 1, "Yes", "No"))
 
 
-#TASK: STRATIFY DATA BY A CATEGORICAL COLUMN AND REPORT MIN, MAX, MEAN AND SD OF 
-#A NUMERIC COLUMN FOR A DEFINED SET OF OBSERVATIONS - ONLY FOR PERSONS TESTED PAN_DAY LATER THAN 50
+#Exploring missing data
+naniar::gg_miss_var(data_tidy)
+#This returns more than 8000 missing values for payor_group and patient_class, and <500 for ct_result
+#Further exploring missing values in payor_group, patient_class and ct_result
+data_tidy %>%
+  filter(is.na(payor_group))%>%
+    count(payor_group)
+
+data_tidy %>%  
+  filter(is.na(patient_class))%>%
+    count(patient_class)
+  
+data_tidy %>%
+  filter(is.na(ct_result))%>%
+    count(ct_result)
+#Payor_group returns 7087 NA, patient class returns 7077 NA and ct_result returns 209 NA
+#When looking at the dataset, it seems like the patient who tested for covid in a clinical lab does not have any data on payor group or patient class.
+
+data_tidy %>%
+  filter(clinic_name == "clinical lab") %>%
+    filter(is.na(payor_group)) %>%
+      count(payor_group)
+
+data_tidy %>%
+  filter(clinic_name == "line clinical lab-") %>%
+    filter(is.na(payor_group)) %>%
+      count(payor_group)
+
+data_tidy %>%
+  filter(clinic_name == "clinical lab") %>%
+    filter(is.na(patient_class)) %>%
+      count(patient_class)
+
+data_tidy %>%
+  filter(clinic_name == "line clinical lab-") %>%
+  filter(is.na(patient_class)) %>%
+  count(patient_class)
+
+#Clincal lab: This returns 6407 NA for payor_group and 6406 NA for patient class.
+#Line clinical lab: 218 NA for payor_group, 218 NA for patient_class
+#The majority of the missing values are therefore connected to the fact that some are tested in a clinical lab
+
+#Stratify data by a categorical column and report min, max, mean and sd of a numeric column
+#Only for persons tested pan_day later than 50
 
 #First: checking if there are any missing values in age
 data_tidy %>%
