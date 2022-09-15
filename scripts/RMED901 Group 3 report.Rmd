@@ -11,30 +11,55 @@ This is the report for group 3 in RMED901.
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-**Reading and loading the data**
+**Reading and loading the data**  
+
 We load the necessary packages first.
-```{r}
+```{r, echo = FALSE}
 library(tidyverse)
 library(here)
 ```
 
 We read the non tidy version of the data, that we will try to tidy later.
-```{r}
+```{rm echo = FALSE}
 data_nontidy <- read_delim(here("data", "copy_exam_nontidy.txt"))
 ```
 
-**Exploring the data**
-Before tidying, we wished to explore the data. We did this by using functions such as head, tail, summary and glimpse. 
-```{r}
+**Exploring the data**  
+
+Before tidying, we wished to explore the data. We did this by using functions such as head, tail, summary and glimpse.  
+Here we only show the results of summary and glimpse, since these gave us the most information about the dataset.
+```{r, echo = FALSE}
 head(data_nontidy)
 tail(data_nontidy)
 ```
+
 ```{r}
 summary(data_nontidy)
 ```
 ```{r}
 glimpse(data_nontidy)
 ```
+```{r}
+skimr::skim(data_nontidy)
+```
+
+There are 15 columns and 34 048 rows in this dataset. 
+
+When looking at the data, we noticed multiple aspects that we wished to change later, such as:  
+
+- Time.measurement should be two variables: col_rec_that and rec_ver_tat
+- Gender.age was one column, when it should be two  
+- Age, pan_day, drive_thru_ind and ct_result were all of the type character, when they should be numeric.  
+
+We also noticed that there are 12 344 unique values for subject, which may indicate that there are variables that lead to multiple observations.  
+
+In the skim, we saw that there is 15527 missing values for the column payor_group, 15506 for patient_class and 452 for ct_result. This we explored further with the use of gg_miss_var.
+
+```{r}
+naniar::gg_miss_var(data_nontidy)
+```
+
+
 
 
 
