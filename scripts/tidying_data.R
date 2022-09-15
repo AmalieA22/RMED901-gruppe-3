@@ -320,5 +320,6 @@ data_result_ct_analysis_2 <-
 
 data_result_ct_analysis_2
 
-data_result_ct_analysis_2 %>%
-  t.test(ct_result ~ result)
+t.test(ct_result ~ result, data = data_result_ct_analysis_2)
+#the t-test found a statistically significant difference between positive and negative tests in ct_results
+#the positive group had a lower mean in ct_results
