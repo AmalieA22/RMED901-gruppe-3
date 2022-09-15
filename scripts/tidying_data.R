@@ -286,3 +286,13 @@ ggplot(data = col_week_data_8,
   ylab("Time between collection and recieve time")
 
 
+
+#create a plot that would help to find if the distribution of the ct_results differ with the sex group
+
+ggplot(data_wrangled_grouped,  
+       aes(x = as.factor(gender), y = ct_result)) +
+  xlab("gender")+
+  ylab("distribution of ct_result")+
+  geom_boxplot(aes(fill=gender))
+
+
