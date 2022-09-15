@@ -161,8 +161,16 @@ Only for those who did not get drive through testing and had a CT result lower t
 Ariell write this
 *CT result equal to 45*
 Ghazal write this
-*Tested after day 50*
-Amalie write this
+
+*Tested after day 50*  
+Here we have chosen age as the numeric column to check min, max, mean and sd.
+
+```{r}
+data_wrangled %>%
+  group_by(pan_day > 50) %>%
+  summarise(min(age), max(age), mean(age), sd(age))
+```
+
 *Not drive through tested and CT lower than 35*
 We wrote code to stratify the dataset for observations that were not tested in drive through or CT score lower than 35:
 ```{r}
@@ -188,6 +196,21 @@ EVERYONE SHOULD ADD THEIR PLOT TO THE LIST AND THEN WRITE ABOUT IT UNDER A SUBHE
 
 *every "subheader" is in itallics*
 
+*Gender differences in taking the test at a drive-through*  
+We made a plot to investigate if there were more females than males that took the test at a drive-through.
+```{r}
+data_drivethrough <- data_wrangled %>%
+  count(gender, drive_thru_ind)
+
+ggplot(data_drivethrough, aes(x = gender, y = n))+
+  geom_col(aes(fill = gender), width = 0.7)+
+  xlab("Gender")+
+  ylab("Took the test at a drive-through")+
+  facet_wrap(facets = vars(drive_thru_ind))+
+  labs(fill = "Gender")
+```
+The plot shows that there are slightly more females than males that took the test at a drive through.
+
 *More tests in any sex groups*
 We made a plot for vizualising the number of tests in both sex groups. We interpeted each observation as an independent test, and simply found the quantity of tests done on men and women.
 ```{r}
@@ -211,6 +234,24 @@ We then analysed the dataset to investigate different questions:
 -If there was a difference in distributions of CT results between outcome groups
 
 EVERYONE SHOULD ADD THEIR ANALYSIS TO THE LIST AND THEN WRITE ABOUT IT UNDER A SUBHEADER
+
+*T-test to find out whether there were more positive tests in the drive-through than elsewhere*
+First, we wanted to look at the number of positive tests in the drive-through vs elsewhere, to see how big of an difference there were.
+```{r}
+data_wrangled %>%
+  group_by(result == "positive") %>%
+  count(drive_thru_ind == "Yes")
+```
+This returns 479 patients with positive results at a drive-through, and 386 patients with positive results elsewhere.  
+We then conducted a t-test to see if there was a significant difference between the groups. Here we coded the negative and invalid results as 0 and positive results as 1. 
+```{r}
+data_wrangled %>%
+  mutate(result = if_else(result == "positive", 1, 0)) %>% 
+  t.test(result~drive_thru_ind, data = .) %>%
+  broom::tidy()
+```
+The table shows a p-value of 0.0172, which is below 0.05.
+We can therefore say that there is a significant difference between the number of positive results at the drive-through and elsewhere.
 
 *T-test of distribution of CT results between outcome groups*
 To do the t-test we first co removed "invalid" from results and NA from ct_results. We then coded the "positive" and "negative" in results as 1 and 0. We then performed the t-test.
