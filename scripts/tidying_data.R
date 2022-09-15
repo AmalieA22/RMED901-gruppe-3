@@ -211,6 +211,8 @@ ggplot(data = count_gender,
            y = n)) +
   geom_col(aes(fill = gender)) +
   scale_fill_brewer(type = "div", palette ="BuPu") +
+  ylab("Number of Tests") +
+  xlab ("Gender") +
   theme_classic()
 #The visualization shows that a few more women got tested, but the difference
 #is relatively small
@@ -266,7 +268,8 @@ ggplot(data = col_week_data_8,
        aes(x = pan_weeks ,
            y = col_rec_tat)) +
   geom_point(aes()) +
-  xlab("Days into pandemic") +
+  geom_smooth(method = "lm") +
+  xlab("Weeks into pandemic") +
   ylab("Time between collection and recieve time")
 
 
