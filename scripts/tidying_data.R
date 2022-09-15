@@ -203,17 +203,11 @@ gender_payor_table <-
 
 
 #create a plot that would help to find if the distribution of the ct_results differ with the sex group
-## calculate sum of ct_result gender
-data_wrangled_grouped <- data_wrangled %>%
-  group_by(gender, ct_result) %>% 
-  summarise(sum = sum(ct_result, na.rm=T))
-data_wrangled_grouped
-my_plot <- ggplot(data_wrangled_grouped,
-                  aes(x = as.factor(gender), y = ct_result)) +
-  geom_col(aes(fill = gender), position = position_dodge())
-my_plot
 
-
-
+ggplot(data_wrangled_grouped,  
+       aes(x = as.factor(gender), y = ct_result)) +
+  xlab("gender")+
+  ylab("distribution of ct_result")+
+  geom_boxplot(aes(fill=gender))
 
 
