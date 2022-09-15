@@ -17,6 +17,7 @@ We load the necessary packages first.
 ```{r}
 library(tidyverse)
 library(here)
+library(ggplot2)
 ```
 
 We read the non tidy version of the data, that we will try to tidy later.
@@ -59,7 +60,39 @@ In the skim, we saw that there is 15527 missing values for the column payor_grou
 naniar::gg_miss_var(data_nontidy)
 ```
 
-**Exploring the missing data**
+
+**Wrangling the data**
+After tidying, we wished to wrangle it to certain specifications. We individually wrote code to:
+-Remove unnecessary columns: row, test_id and demo_group
+-Change the variable types
+-Create a new set of columns showing whether rec_ver_Tat is higher than 100 or not, showing pan_day in weeks, showing drive_thru_ind as Yes/No and showing the multiplication of ct_result and orderset for each person
+-Set the order of columns as: id, age, gender and other columns
+-Arrange ID column to increasing numbers
+-Join an additional dataset to the main dataset
+
+We then took all our individual code and wrote a pipeline which could do all of this with our tidy data, creating a new data-set in the progress: data_wrangled
+```{r}
+data_wrangled <- 
+  data_tidy %>% 
+  select(-row,-"1_test_id", -demo_group) %>% 
+  mutate(age = as.numeric(age),
+         pan_day = as.numeric(pan_day),
+         drive_thru_ind = as.numeric(drive_thru_ind),
+         ct_result = as.numeric(ct_result),
+         id = as.numeric(id)) %>% 
+  mutate(rec_ver_tat= if_else(rec_ver_tat>=100, "High", "Low")) %>% 
+  mutate(pan_weeks = pan_day / 7) %>% 
+  mutate(drive_thru_ind = if_else(drive_thru_ind == 1, "Yes", "No")) %>% 
+  mutate(ct_order_result = ct_result * orderset) %>% 
+  select(c(id, age, gender), everything()) %>%
+  arrange(id) %>% 
+  left_join(data_join)
+```
+
+**Exploring the data**
+Ariell and Amalie should write about this
+
+*Exploring the missing data*
 After exploring the data in data_wrangled, we wished to look at the missing data. To do this, we first used the gg_miss_var function.
 ```{r}
 naniar::gg_miss_var(data_wrangled)
@@ -117,10 +150,75 @@ For those tested in a clinical lab, there are 6407 missing values for payor_grou
 The majority of the missing values are therefore connected to the fact that some are tested in a clinical lab.
 
 
+**Stratifying the data**
+We then stratified the data and reported min, max, mean and sd of a numeric column for a defined set of observations:
+-Only inpatients
+-Only persons with CT results equal to 45
+-Only those tested after the 50th day of the pandemic
+Only for those who did not get drive through testing and had a CT result lower than 35 
 
+*Only inpatients*
+Ariell write this
+*CT result equal to 45*
+Ghazal write this
+*Tested after day 50*
+Amalie write this
+*Not drive through tested and CT lower than 35*
+We wrote code to stratify the dataset for observations that were not tested in drive through or CT score lower than 35:
+```{r}
+data_wrangled %>%
+  filter(drive_thru_ind == "No"& ct_result < 35) %>%
+  head()
+```
+We found that this did not give any remaining observations, so there are no observation that were not tested in drive through with a CT score lower than 35.
 
+**Creating a table**
+We then created a table from the "gender" and "payor_group" columns.
+```{r}
+gender_payor_table <- 
+  data_wrangled %>%
+  with(table(gender, payor_group))
+```
 
+**Plots**
+We then made a set of plots to investigate some questions:
+-If there were more tests in any of the sex groups
 
+EVERYONE SHOULD ADD THEIR PLOT TO THE LIST AND THEN WRITE ABOUT IT UNDER A SUBHEADER
 
+*every "subheader" is in itallics*
 
+*More tests in any sex groups*
+We made a plot for vizualising the number of tests in both sex groups. We interpeted each observation as an independent test, and simply found the quantity of tests done on men and women.
+```{r}
+count_gender <- 
+  data_wrangled %>%
+  count(gender)
+ggplot(data = count_gender, 
+       aes(group = gender,
+           x = gender, 
+           y = n)) +
+  geom_col(aes(fill = gender)) +
+  scale_fill_brewer(type = "div", palette ="BuPu") +
+  ylab("Number of Tests") +
+  xlab ("Gender") +
+  theme_classic()
+```
+This shows that there is a difference between men and women in number of tests, but that this difference is relatively small with women having slightly more tests.
 
+**Analysis**
+We then analysed the dataset to investigate different questions:
+-If there was a difference in distributions of CT results between outcome groups
+
+EVERYONE SHOULD ADD THEIR ANALYSIS TO THE LIST AND THEN WRITE ABOUT IT UNDER A SUBHEADER
+
+*T-test of distribution of CT results between outcome groups*
+To do the t-test we first co removed "invalid" from results and NA from ct_results. We then coded the "positive" and "negative" in results as 1 and 0. We then performed the t-test.
+```{r}
+data_wrangled %>%
+  subset(ct_result != "NA") %>%
+  subset(result != "invalid") %>%
+  mutate(result = if_else(result == "positive", 1, 0)) %>%
+  t.test(ct_result ~ result, data = .)
+```
+We find that there is a statistically significant difference between the two groups, with the group with negative tests having a much higher CT score.
