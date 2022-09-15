@@ -320,4 +320,24 @@ ggplot(data_wrangled_grouped,
 
 #the box plots displays the range and the median of ct_result in each group
 
+#Analysis to investigate if there is a difference in the distribution of ct_results between outcome groups
+#First looking at the variables in question
+glimpse(data_wrangled)
 
+#I will make a dataset without "invalid" in result and "NA" in ct_result
+data_result_ct_analysis <-
+  data_wrangled %>%
+  subset(ct_result != "NA") %>%
+  subset(result != "invalid")
+
+data_result_ct_analysis 
+#This dataset should be more fitting. I will now recode results to positive=1 and negative=0
+data_result_ct_analysis_2 <- 
+  data_result_ct_analysis %>%
+  mutate(result = if_else(result == "positive", 1, 0))
+
+data_result_ct_analysis_2
+
+t.test(ct_result ~ result, data = data_result_ct_analysis_2)
+#the t-test found a statistically significant difference between positive and negative tests in ct_results
+#the positive group had a lower mean in ct_results
