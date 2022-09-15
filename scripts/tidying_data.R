@@ -8,9 +8,7 @@
 
 #Loading and reading a copy version of the data
 
-install.packages("ggplot2")
 library(ggplot2)
-
 library(tidyverse)
 library(here)
 
