@@ -128,6 +128,8 @@ data_wrangled <-
   arrange(id) %>% 
   left_join(data_join)
 
+glimpse(data_wrangled)
+
 #EXPLORING MISSING DATA
 naniar::gg_miss_var(data_wrangled)
 #This returns more than 8000 missing values for payor_group and patient_class, and <500 for ct_result
@@ -198,4 +200,76 @@ data_wrangled %>%
 gender_payor_table <- 
   data_wrangled %>%
   with(table(gender, payor_group))
+
+#Plot to illustrate sex differences in testing
+count_gender <- 
+  data_wrangled %>%
+  count(gender)
+ggplot(data = count_gender, 
+       aes(group = gender,
+           x = gender, 
+           y = n)) +
+  geom_col(aes(fill = gender)) +
+  scale_fill_brewer(type = "div", palette ="BuPu") +
+  ylab("Number of Tests") +
+  xlab ("Gender") +
+  theme_classic()
+#The visualization shows that a few more women got tested, but the difference
+#is relatively small
+
+#Plot to illustrate if time spent waiting for test reuslts improves 
+#over the course of the pandemic
+ggplot(data = data_wrangled,
+       aes(x = pan_weeks ,
+           y = col_rec_tat)) +
+  geom_point() +
+  xlab("Days into pandemic") +
+  ylab("Time between collection and recieve time")
+#When making this plot we see one severe outlier.
+#This is likely an error and I will remove it from further vizualisation
+#First we find the row with this value:
+count_col_rec_tat <- 
+  data_wrangled %>%
+  count(col_rec_tat, id, pan_weeks)
+
+tail(count_col_rec_tat, 8)
+
+data_wrangled %>%
+  group_by(data_wrangled$col_rec_tat)
+
+col_week_data <- data_wrangled %>%
+  subset(id != 801)
+
+ggplot(data = col_week_data,
+       aes(x = pan_weeks ,
+           y = col_rec_tat)) +
+  geom_point() +
+  xlab("Days into pandemic") +
+  ylab("Time between collection and recieve time")
+#We still see that there are a few outliers, which make interpretation difficult
+#We will remove these as well, to make interpretation easier
+
+col_week_data_2 <- col_week_data %>%
+  subset(id != (11684))
+col_week_data_3 <- col_week_data_2 %>%
+  subset(id != (214))
+col_week_data_4 <- col_week_data_3 %>%
+  subset(id != (2193))
+col_week_data_5 <- col_week_data_4 %>%
+  subset(id != (5018))
+col_week_data_6 <- col_week_data_5 %>%
+  subset(id != (1306))
+col_week_data_7 <- col_week_data_6 %>%
+  subset(id != (2609))
+col_week_data_8 <- col_week_data_7 %>%
+  subset(id != (4859))
+
+ggplot(data = col_week_data_8,
+       aes(x = pan_weeks ,
+           y = col_rec_tat)) +
+  geom_point(aes()) +
+  geom_smooth(method = "lm") +
+  xlab("Weeks into pandemic") +
+  ylab("Time between collection and recieve time")
+
 
