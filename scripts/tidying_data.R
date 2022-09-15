@@ -214,4 +214,4 @@ ggplot(data_wrangled_grouped,
   ylab("distribution of ct_result")+
   geom_boxplot(aes(fill=gender))
 
-
+#the box plots displays the range and the median of ct_result in each group
