@@ -292,6 +292,7 @@ data_wrangled %>%
 #This returns 479 patients with positive results at a drive-through
 #It also returns 386 patients with positive results, but not at a drive-through
 
+#We will conduct a t-test to see if there is a significant difference between the groups
 data_wrangled %>%
   mutate(result = if_else(result == "positive", 1, 0)) %>% 
   t.test(result~drive_thru_ind, data = .) %>%
