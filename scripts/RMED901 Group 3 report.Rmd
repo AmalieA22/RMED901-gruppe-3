@@ -60,8 +60,6 @@ naniar::gg_miss_var(data_nontidy)
 ```
 
 
-
-
 **Wrangling the data**
 After tidying, we wished to wrangle it to certain specifications. We individually wrote code to:
 -Remove unnecessary columns: row, test_id and demo_group
@@ -107,6 +105,13 @@ Ghazal write this
 *Tested after day 50*
 Amalie write this
 *Not drive through tested and CT lower than 35*
+We wrote code to stratify the dataset for observations that were not tested in drive through or CT score lower than 35:
+```{r}
+data_wrangled %>%
+  filter(drive_thru_ind == "No"& ct_result < 35) %>%
+  head()
+```
+We found that this did not give any remaining observations, so there are no observation that were not tested in drive through with a CT score lower than 35.
 
 **Creating a table**
 We then created a table from the "gender" and "payor_group" columns.
@@ -120,13 +125,41 @@ gender_payor_table <-
 We then made a set of plots to investigate some questions:
 -If there were more tests in any of the sex groups
 
-
 EVERYONE SHOULD ADD THEIR PLOT TO THE LIST AND THEN WRITE ABOUT IT UNDER A SUBHEADER
 
 *every "subheader" is in itallics*
+
+*More tests in any sex groups*
+We made a plot for vizualising the number of tests in both sex groups. We interpeted each observation as an independent test, and simply found the quantity of tests done on men and women.
+```{r}
+count_gender <- 
+  data_wrangled %>%
+  count(gender)
+ggplot(data = count_gender, 
+       aes(group = gender,
+           x = gender, 
+           y = n)) +
+  geom_col(aes(fill = gender)) +
+  scale_fill_brewer(type = "div", palette ="BuPu") +
+  ylab("Number of Tests") +
+  xlab ("Gender") +
+  theme_classic()
+```
+This shows that there is a difference between men and women in number of tests, but that this difference is relatively small with women having slightly more tests.
 
 **Analysis**
 We then analysed the dataset to investigate different questions:
 -If there was a difference in distributions of CT results between outcome groups
 
 EVERYONE SHOULD ADD THEIR ANALYSIS TO THE LIST AND THEN WRITE ABOUT IT UNDER A SUBHEADER
+
+*T-test of distribution of CT results between outcome groups*
+To do the t-test we first co removed "invalid" from results and NA from ct_results. We then coded the "positive" and "negative" in results as 1 and 0. We then performed the t-test.
+```{r}
+data_wrangled %>%
+  subset(ct_result != "NA") %>%
+  subset(result != "invalid") %>%
+  mutate(result = if_else(result == "positive", 1, 0)) %>%
+  t.test(ct_result ~ result, data = .)
+```
+We find that there is a statistically significant difference between the two groups, with the group with negative tests having a much higher CT score.
