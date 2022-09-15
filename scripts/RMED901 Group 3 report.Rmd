@@ -17,6 +17,7 @@ We load the necessary packages first.
 ```{r, echo = FALSE}
 library(tidyverse)
 library(here)
+library(ggplot2)
 ```
 
 We read the non tidy version of the data, that we will try to tidy later.
