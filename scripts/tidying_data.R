@@ -285,4 +285,19 @@ ggplot(data = col_week_data_8,
   xlab("Weeks into pandemic") +
   ylab("Time between collection and recieve time")
 
+#Are there more positive tests in the drive-through?
+data_wrangled %>%
+  group_by(result == "positive") %>%
+  count(drive_thru_ind == "Yes")
+#This returns 479 patients with positive results at a drive-through
+#It also returns 386 patients with positive results, but not at a drive-through
+
+data_wrangled %>%
+  mutate(result = if_else(result == "positive", 1, 0)) %>% 
+  t.test(result~drive_thru_ind, data = .) %>%
+  broom::tidy()
+#Invalid and negative results are coded as 0, positive results as 1.
+
+
+
 
