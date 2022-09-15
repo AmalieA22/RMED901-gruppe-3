@@ -14,13 +14,13 @@ knitr::opts_chunk$set(echo = TRUE)
 **Reading and loading the data**  
 
 We load the necessary packages first.
-```{r, echo = FALSE}
+```{r}
 library(tidyverse)
 library(here)
 ```
 
 We read the non tidy version of the data, that we will try to tidy later.
-```{rm echo = FALSE}
+```{r}
 data_nontidy <- read_delim(here("data", "copy_exam_nontidy.txt"))
 ```
 
@@ -58,6 +58,67 @@ In the skim, we saw that there is 15527 missing values for the column payor_grou
 ```{r}
 naniar::gg_miss_var(data_nontidy)
 ```
+
+**Exploring the missing data**
+After exploring the data in data_wrangled, we wished to look at the missing data. To do this, we first used the gg_miss_var function.
+```{r}
+naniar::gg_miss_var(data_wrangled)
+```
+This returns more than 8000 missing values for the columns payor_group and patient_class, and <500 for ct_result.  
+
+To get more specific numbers for missing values, we wanted to count up the NAs in each column. To do this, we first filtered by NAs, and afterwards counted the remaining values.
+```{r}
+#For payor_group
+data_wrangled %>%
+  filter(is.na(payor_group))%>%
+    count(payor_group)
+```
+```{r}
+#For patient class
+data_wrangled %>%  
+  filter(is.na(patient_class))%>%
+    count(patient_class)
+```
+```{r}
+#For ct_result
+data_wrangled %>%
+  filter(is.na(ct_result))%>%
+    count(ct_result)
+```
+In the output, we see that payor_group returns 7087 NA, patient_class returns 7077 NA and ct_result returns 209 NA. When compared to the untidy data, the number of missing values have decreased substantially.  
+
+When looking at the values in the dataset, it seems like the patients who tested for covid-19 in clinical labs did not have any data on payor group or patient class.  
+To test if this hypothesis was true, we first filtered out by those who were tested in a clinical lab or "line clinical lab", and then those who had missing values in either patient_class or payor_group. 
+```{r}
+#Missing payor group values in patients who were tested in a clinical lab
+data_wrangled %>%
+  filter(clinic_name == "clinical lab") %>%
+    filter(is.na(payor_group)) %>%
+      count(payor_group)
+
+data_wrangled %>%
+  filter(clinic_name == "line clinical lab-") %>%
+    filter(is.na(payor_group)) %>%
+      count(payor_group)
+```
+```{r}
+#Missing patient class values in patients who were tested in a clinical lab
+data_wrangled %>%
+  filter(clinic_name == "clinical lab") %>%
+    filter(is.na(patient_class)) %>%
+      count(patient_class)
+
+data_wrangled %>%
+  filter(clinic_name == "line clinical lab-") %>%
+  filter(is.na(patient_class)) %>%
+  count(patient_class)
+```
+For those tested in a clinical lab, there are 6407 missing values for payor_group and 6406 for patient_class. For the line clinical lab, there are 218 missing values for payor_group and 218 for patient_class.  
+The majority of the missing values are therefore connected to the fact that some are tested in a clinical lab.
+
+
+
+
 
 
 
