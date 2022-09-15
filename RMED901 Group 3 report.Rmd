@@ -1,6 +1,0 @@
----
-title: "RMED901 Group 3 report"
-output: html_document
-date: "2022-09-15"
----
-
