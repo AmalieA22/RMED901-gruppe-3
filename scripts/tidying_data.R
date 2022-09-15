@@ -297,7 +297,9 @@ data_wrangled %>%
   t.test(result~drive_thru_ind, data = .) %>%
   broom::tidy()
 #Invalid and negative results are coded as 0, positive results as 1.
-
+#The table shows a p-value of 0.0172, which is below 0.05. 
+#We can therefore say that there is a significant difference between the number of positive results at the drive through and at other places. 
+#The calculations above the t-test also confirms this, with almost 100 more positive tests.
 
 
 
