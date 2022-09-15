@@ -6,6 +6,7 @@
 #------------------------------#
 
 #Loading packages
+library(ggplot2)
 library(tidyverse)
 library(here)
 
