@@ -4,9 +4,37 @@ Authors: "Amalie Austgulen, André Høberg, Ariell Thale Toftesund Longva, Ghaza
 output: html_document
 date: "2022-09-15"
 ---
+This is the report for group 3 in RMED901.
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
+**Reading and loading the data**
+We load the necessary packages first.
+```{r}
+library(tidyverse)
+library(here)
+```
+
+We read the non tidy version of the data, that we will try to tidy later.
+```{r}
+data_nontidy <- read_delim(here("data", "copy_exam_nontidy.txt"))
+```
+
+**Exploring the data**
+Before tidying, we wished to explore the data. We did this by using functions such as head, tail, summary and glimpse. 
+```{r}
+head(data_nontidy)
+tail(data_nontidy)
+```
+```{r}
+summary(data_nontidy)
+```
+```{r}
+glimpse(data_nontidy)
+```
+
 
 
