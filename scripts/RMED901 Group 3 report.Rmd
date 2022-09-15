@@ -1,0 +1,12 @@
+---
+title: "RMED901 Group 3 report"
+Authors: "Amalie Austgulen, André Høberg, Ariell Thale Toftesund Longva, Ghazal Lessan Toussi"
+output: html_document
+date: "2022-09-15"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+

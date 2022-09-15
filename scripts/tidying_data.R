@@ -6,8 +6,10 @@
 # Description: A script for tidying the exam dataset
 #------------------------------#
 
-
 #Loading and reading a copy version of the data
+
+install.packages("ggplot2")
+library(ggplot2)
 
 library(tidyverse)
 library(here)
@@ -95,33 +97,33 @@ naniar::gg_miss_var(data_wrangled)
 #Further exploring missing values in payor_group, patient_class and ct_result
 data_wrangled %>%
   filter(is.na(payor_group))%>%
-  count(payor_group)
+    count(payor_group)
 
 data_wrangled %>%  
   filter(is.na(patient_class))%>%
-  count(patient_class)
-
+    count(patient_class)
+  
 data_wrangled %>%
   filter(is.na(ct_result))%>%
-  count(ct_result)
+    count(ct_result)
 
 #Payor_group returns 7087 NA, patient class returns 7077 NA and ct_result returns 209 NA
 #When looking at the dataset, it seems like the patient who tested for covid in a clinical lab does not have any data on payor group or patient class.
 
 data_wrangled %>%
   filter(clinic_name == "clinical lab") %>%
-  filter(is.na(payor_group)) %>%
-  count(payor_group)
+    filter(is.na(payor_group)) %>%
+      count(payor_group)
 
 data_wrangled %>%
   filter(clinic_name == "line clinical lab-") %>%
-  filter(is.na(payor_group)) %>%
-  count(payor_group)
+    filter(is.na(payor_group)) %>%
+      count(payor_group)
 
 data_wrangled %>%
   filter(clinic_name == "clinical lab") %>%
-  filter(is.na(patient_class)) %>%
-  count(patient_class)
+    filter(is.na(patient_class)) %>%
+      count(patient_class)
 
 data_wrangled %>%
   filter(clinic_name == "line clinical lab-") %>%
@@ -140,7 +142,6 @@ data_wrangled %>%
 data_wrangled %>%
   group_by(patient_class =="inpatient") %>%
   summarize(min(age, na.rm = T),max(age, na.rm = T),mean(age, na.rm = T), sd(age, na.rm = T))
-
 
 #Only for persons with ct_result == 45
 data_wrangled %>%
@@ -163,11 +164,124 @@ data_wrangled %>%
 gender_payor_table <- 
   data_wrangled %>%
   with(table(gender, payor_group))
+  
+#PLOTS
 
-install.packages("ggplot2")
-library(ggplot2)
+#Were there more females than males that took the test at a drive through?
+data_drivethrough <- data_wrangled %>%
+  count(gender, drive_thru_ind)
 
-#Does the distribution of the `ct_result` differ with `payor_group`?
+ggplot(data_drivethrough, aes(x = gender, y = n))+
+  geom_col(aes(fill = gender), width = 0.7)+
+  xlab("Gender")+
+  ylab("Took the test at a drive-through")+
+  facet_wrap(facets = vars(drive_thru_ind))+
+  labs(fill = "Gender")
+
+#The plot shows that there are slightly more females than males who took the test at a drive through.
+
+#Plot to illustrate sex differences in testing
+count_gender <- 
+  data_wrangled %>%
+  count(gender)
+ggplot(data = count_gender, 
+       aes(group = gender,
+           x = gender, 
+           y = n)) +
+  geom_col(aes(fill = gender)) +
+  scale_fill_brewer(type = "div", palette ="BuPu") +
+  ylab("Number of Tests") +
+  xlab ("Gender") +
+  theme_classic()
+#The visualization shows that a few more women got tested, but the difference
+#is relatively small
+
+#Plot to illustrate if time spent waiting for test reuslts improves 
+#over the course of the pandemic
+ggplot(data = data_wrangled,
+       aes(x = pan_weeks ,
+           y = col_rec_tat)) +
+  geom_point() +
+  xlab("Days into pandemic") +
+  ylab("Time between collection and recieve time")
+#When making this plot we see one severe outlier.
+#This is likely an error and I will remove it from further vizualisation
+#First we find the row with this value:
+count_col_rec_tat <- 
+  data_wrangled %>%
+  count(col_rec_tat, id, pan_weeks)
+
+tail(count_col_rec_tat, 8)
+
+data_wrangled %>%
+  group_by(data_wrangled$col_rec_tat)
+
+col_week_data <- data_wrangled %>%
+  subset(id != 801)
+
+ggplot(data = col_week_data,
+       aes(x = pan_weeks ,
+           y = col_rec_tat)) +
+  geom_point() +
+  xlab("Days into pandemic") +
+  ylab("Time between collection and recieve time")
+#We still see that there are a few outliers, which make interpretation difficult
+#We will remove these as well, to make interpretation easier
+
+col_week_data_2 <- col_week_data %>%
+  subset(id != (11684))
+col_week_data_3 <- col_week_data_2 %>%
+  subset(id != (214))
+col_week_data_4 <- col_week_data_3 %>%
+  subset(id != (2193))
+col_week_data_5 <- col_week_data_4 %>%
+  subset(id != (5018))
+col_week_data_6 <- col_week_data_5 %>%
+  subset(id != (1306))
+col_week_data_7 <- col_week_data_6 %>%
+  subset(id != (2609))
+col_week_data_8 <- col_week_data_7 %>%
+  subset(id != (4859))
+
+ggplot(data = col_week_data_8,
+       aes(x = pan_weeks ,
+           y = col_rec_tat)) +
+  geom_point(aes()) +
+  geom_smooth(method = "lm") +
+  xlab("Weeks into pandemic") +
+  ylab("Time between collection and recieve time")
+
+#Are there more positive tests in the drive-through?
+data_wrangled %>%
+  group_by(result == "positive") %>%
+  count(drive_thru_ind == "Yes")
+#This returns 479 patients with positive results at a drive-through
+#It also returns 386 patients with positive results, but not at a drive-through
+
+#We will conduct a t-test to see if there is a significant difference between the groups
+data_wrangled %>%
+  mutate(result = if_else(result == "positive", 1, 0)) %>% 
+  t.test(result~drive_thru_ind, data = .) %>%
+  broom::tidy()
+#Invalid and negative results are coded as 0, positive results as 1.
+#The table shows a p-value of 0.0172, which is below 0.05. 
+#We can therefore say that there is a significant difference between the number of positive results at the drive through and at other places. 
+#The calculations above the t-test also confirms this, with almost 100 more positive tests.
+
+#create a plot that would help to find if the distribution of the ct_results differ with the sex group
+
+data_wrangled_grouped <- data_wrangled %>%
+  group_by(gender, ct_result) %>% 
+  summarise(sum = sum(ct_result, na.rm=T))
+data_wrangled_grouped
+
+ggplot(data_wrangled_grouped,  
+       aes(x = as.factor(gender), y = ct_result)) +
+  xlab("gender")+
+  ylab("distribution of ct_result")+
+  geom_boxplot(aes(fill=gender))
+  
+  #Does the distribution of the `ct_result` differ with `payor_group`?
 data_to_be_analyzed<-
 data_wrangled %>%
   count(payor_group,ct_result)
@@ -183,3 +297,26 @@ comparing_payor_group_ct <-
 
 comparing_payor_group_ct
 
+#the box plots displays the range and the median of ct_result in each group
+
+#Analysis to investigate if there is a difference in the distribution of ct_results between outcome groups
+#First looking at the variables in question
+glimpse(data_wrangled)
+
+#I will make a dataset without "invalid" in result and "NA" in ct_result
+data_result_ct_analysis <-
+  data_wrangled %>%
+  subset(ct_result != "NA") %>%
+  subset(result != "invalid")
+
+data_result_ct_analysis 
+#This dataset should be more fitting. I will now recode results to positive=1 and negative=0
+data_result_ct_analysis_2 <- 
+  data_result_ct_analysis %>%
+  mutate(result = if_else(result == "positive", 1, 0))
+
+data_result_ct_analysis_2
+
+t.test(ct_result ~ result, data = data_result_ct_analysis_2)
+#the t-test found a statistically significant difference between positive and negative tests in ct_results
+#the positive group had a lower mean in ct_results
