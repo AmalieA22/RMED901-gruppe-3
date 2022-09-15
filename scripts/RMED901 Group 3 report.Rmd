@@ -14,13 +14,13 @@ knitr::opts_chunk$set(echo = TRUE)
 **Reading and loading the data**  
 
 We load the necessary packages first.
-```{r, echo = FALSE}
+```{r}
 library(tidyverse)
 library(here)
 ```
 
 We read the non tidy version of the data, that we will try to tidy later.
-```{rm echo = FALSE}
+```{r}
 data_nontidy <- read_delim(here("data", "copy_exam_nontidy.txt"))
 ```
 
@@ -58,6 +58,7 @@ In the skim, we saw that there is 15527 missing values for the column payor_grou
 ```{r}
 naniar::gg_miss_var(data_nontidy)
 ```
+
 
 
 
