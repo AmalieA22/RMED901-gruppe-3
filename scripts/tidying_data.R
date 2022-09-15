@@ -191,16 +191,17 @@ gender_payor_table <-
   data_wrangled %>%
   with(table(gender, payor_group))
 
-#3: Were there more females than males that took the test at a drive through?
+#Were there more females than males that took the test at a drive through?
 data_drivethrough <- data_wrangled %>%
   count(gender, drive_thru_ind)
 
 ggplot(data_drivethrough, aes(x = gender, y = n))+
-  geom_col(aes(fill = gender), width = 0.5, position = position_dodge(0.6))+
+  geom_col(aes(fill = gender), width = 0.7)+
   xlab("Gender")+
   ylab("Took the test at a drive-through")+
-  facet_wrap(facets = vars(drive_thru_ind))
+  facet_wrap(facets = vars(drive_thru_ind))+
+  labs(fill = "Gender")
 
-
+#The plot shows that there are slightly more females than males who took the test at a drive through.
 
 
