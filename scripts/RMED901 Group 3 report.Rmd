@@ -29,7 +29,7 @@ data_nontidy <- read_delim(here("data", "copy_exam_nontidy.txt"))
 
 Before tidying, we wished to explore the data. We did this by using functions such as head, tail, summary and glimpse.  
 Here we only show the results of summary and glimpse, since these gave us the most information about the dataset.
-```{r, echo = FALSE}
+```{r}
 head(data_nontidy)
 tail(data_nontidy)
 ```
@@ -59,11 +59,11 @@ In the skim, we saw that there is 15527 missing values for the column payor_grou
 ```{r}
 naniar::gg_miss_var(data_nontidy)
 ```
-**Tidying the data**
-To tidy the data, we wrote a pipe that:
-- Renames columns to not include "_" or "."
-- Separates age and gender into two columns
-- Separates subject into three columns; "ID", "first name", "surname"
+**Tidying the data**  
+To tidy the data, we wrote a pipe that:  
+- Renames columns to not include "_" or "."  
+- Separates age and gender into two columns  
+- Separates subject into three columns; "ID", "first name", "surname"  
 - Widens time.measurement to rec_ver_tat and col_rec_that
 ```{r}
 data_tidy<-
@@ -81,14 +81,15 @@ data_tidy<-
 ```
 When first running the code without distinct, there would be a warning message since there were a lot of duplicates. Distinct() selected only unique/distinct rows from the dataframe, and it is now 152 524 rows and 15 columns. 
 
-**Wrangling the data**
-After tidying, we wished to wrangle it to certain specifications. We individually wrote code to:
--Remove unnecessary columns: row, test_id and demo_group
--Change the variable types
--Create a new set of columns showing whether rec_ver_Tat is higher than 100 or not, showing pan_day in weeks, showing drive_thru_ind as Yes/No and showing the multiplication of ct_result and orderset for each person
--Set the order of columns as: id, age, gender and other columns
--Arrange ID column to increasing numbers
+**Wrangling the data**  
+After tidying, we wished to wrangle it to certain specifications. We individually wrote code to:  
+-Remove unnecessary columns: row, test_id and demo_group  
+-Change the variable types  
+-Create a new set of columns showing whether rec_ver_Tat is higher than 100 or not, showing pan_day in weeks, showing drive_thru_ind as Yes/No and showing the multiplication of ct_result and orderset for each person  
+-Set the order of columns as: id, age, gender and other columns  
+-Arrange ID column to increasing numbers  
 -Join an additional dataset to the main dataset
+
 
 We then took all our individual code and wrote a pipeline which could do all of this with our tidy data, creating a new data-set in the progress: data_wrangled
 ```{r}
@@ -119,11 +120,13 @@ data_wrangled <-
 Ariell and Amalie should write about this
 
 *Exploring the missing data*
+
 After exploring the data in data_wrangled, we wished to look at the missing data. To do this, we first used the gg_miss_var function.
 ```{r}
 naniar::gg_miss_var(data_wrangled)
 ```
 This returns more than 8000 missing values for the columns payor_group and patient_class, and <500 for ct_result.  
+
 
 To get more specific numbers for missing values, we wanted to count up the NAs in each column. To do this, we first filtered by NAs, and afterwards counted the remaining values.
 ```{r}
@@ -145,6 +148,7 @@ data_wrangled %>%
     count(ct_result)
 ```
 In the output, we see that payor_group returns 7087 NA, patient_class returns 7077 NA and ct_result returns 209 NA. When compared to the untidy data, the number of missing values have decreased substantially.  
+
 
 When looking at the values in the dataset, it seems like the patients who tested for covid-19 in clinical labs did not have any data on payor group or patient class.  
 To test if this hypothesis was true, we first filtered out by those who were tested in a clinical lab or "line clinical lab", and then those who had missing values in either patient_class or payor_group. 
@@ -176,12 +180,12 @@ For those tested in a clinical lab, there are 6407 missing values for payor_grou
 The majority of the missing values are therefore connected to the fact that some are tested in a clinical lab.
 
 
-**Stratifying the data**
+**Stratifying the data**  
 We then stratified the data and reported min, max, mean and sd of a numeric column for a defined set of observations:
--Only inpatients
--Only persons with CT results equal to 45
--Only those tested after the 50th day of the pandemic
-Only for those who did not get drive through testing and had a CT result lower than 35 
+-Only inpatients  
+-Only persons with CT results equal to 45  
+-Only those tested after the 50th day of the pandemic  
+-Only for those who did not get drive through testing and had a CT result lower than 35 
 
 *Only inpatients*
 Ariell write this
@@ -197,16 +201,17 @@ data_wrangled %>%
   summarise(min(age), max(age), mean(age), sd(age))
 ```
 
-*Not drive through tested and CT lower than 35*
+*Not drive through tested and CT lower than 35*  
 We wrote code to stratify the dataset for observations that were not tested in drive through or CT score lower than 35:
 ```{r}
 data_wrangled %>%
   filter(drive_thru_ind == "No"& ct_result < 35) %>%
   head()
 ```
+
 We found that this did not give any remaining observations, so there are no observation that were not tested in drive through with a CT score lower than 35.
 
-**Creating a table**
+**Creating a table**  
 We then created a table from the "gender" and "payor_group" columns.
 ```{r}
 gender_payor_table <- 
@@ -214,8 +219,8 @@ gender_payor_table <-
   with(table(gender, payor_group))
 ```
 
-**Plots**
-We then made a set of plots to investigate some questions:
+**Plots**  
+We then made a set of plots to investigate some questions:  
 -If there were more tests in any of the sex groups
 
 EVERYONE SHOULD ADD THEIR PLOT TO THE LIST AND THEN WRITE ABOUT IT UNDER A SUBHEADER
@@ -235,9 +240,10 @@ ggplot(data_drivethrough, aes(x = gender, y = n))+
   facet_wrap(facets = vars(drive_thru_ind))+
   labs(fill = "Gender")
 ```
+  
 The plot shows that there are slightly more females than males that took the test at a drive through.
 
-*More tests in any sex groups*
+*More tests in any sex groups*  
 We made a plot for vizualising the number of tests in both sex groups. We interpeted each observation as an independent test, and simply found the quantity of tests done on men and women.
 ```{r}
 count_gender <- 
@@ -253,15 +259,16 @@ ggplot(data = count_gender,
   xlab ("Gender") +
   theme_classic()
 ```
+
 This shows that there is a difference between men and women in number of tests, but that this difference is relatively small with women having slightly more tests.
 
-**Analysis**
-We then analysed the dataset to investigate different questions:
+**Analysis**  
+We then analysed the dataset to investigate different questions:  
 -If there was a difference in distributions of CT results between outcome groups
 
 EVERYONE SHOULD ADD THEIR ANALYSIS TO THE LIST AND THEN WRITE ABOUT IT UNDER A SUBHEADER
 
-*T-test to find out whether there were more positive tests in the drive-through than elsewhere*
+*T-test to find out whether there were more positive tests in the drive-through than elsewhere*  
 First, we wanted to look at the number of positive tests in the drive-through vs elsewhere, to see how big of an difference there were.
 ```{r}
 data_wrangled %>%
@@ -279,7 +286,7 @@ data_wrangled %>%
 The table shows a p-value of 0.0172, which is below 0.05.
 We can therefore say that there is a significant difference between the number of positive results at the drive-through and elsewhere.
 
-*T-test of distribution of CT results between outcome groups*
+*T-test of distribution of CT results between outcome groups*  
 To do the t-test we first co removed "invalid" from results and NA from ct_results. We then coded the "positive" and "negative" in results as 1 and 0. We then performed the t-test.
 ```{r}
 data_wrangled %>%
