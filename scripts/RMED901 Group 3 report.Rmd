@@ -59,7 +59,27 @@ In the skim, we saw that there is 15527 missing values for the column payor_grou
 ```{r}
 naniar::gg_miss_var(data_nontidy)
 ```
-
+**Tidying the data**
+To tidy the data, we wrote a pipe that:
+- Renames columns to not include "_" or "."
+- Separates age and gender into two columns
+- Separates subject into three columns; "ID", "first name", "surname"
+- Widens time.measurement to rec_ver_tat and col_rec_that
+```{r}
+data_tidy<-
+  data_nontidy %>%
+  rename(value=.value,
+         pan_day="pan day")%>%
+  separate(col = "gender-age",
+           into = c("gender", "age"),
+           sep = "-")%>%
+  separate(col = subject,
+           into = c("id", "first_name", "last_name"),
+           sep = " ") %>%
+  distinct() %>%
+  pivot_wider(names_from = "time measurement", values_from = "value")
+```
+When first running the code without distinct, there would be a warning message since there were a lot of duplicates. Distinct() selected only unique/distinct rows from the dataframe, and it is now 152 524 rows and 15 columns. 
 
 **Wrangling the data**
 After tidying, we wished to wrangle it to certain specifications. We individually wrote code to:
@@ -72,6 +92,12 @@ After tidying, we wished to wrangle it to certain specifications. We individuall
 
 We then took all our individual code and wrote a pipeline which could do all of this with our tidy data, creating a new data-set in the progress: data_wrangled
 ```{r}
+#Reading the new data
+data_join <- read.delim(here("data", "copy_exam_joindata.txt"))
+```
+
+```{r}
+#Creating the data_wrangled object
 data_wrangled <- 
   data_tidy %>% 
   select(-row,-"1_test_id", -demo_group) %>% 
