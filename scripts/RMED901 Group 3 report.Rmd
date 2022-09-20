@@ -29,7 +29,7 @@ data_nontidy <- read_delim(here("data", "copy_exam_nontidy.txt"))
 
 Before tidying, we wished to explore the data. We did this by using functions such as head, tail, summary and glimpse.  
 Here we only show the results of summary and glimpse, since these gave us the most information about the dataset.
-```{r, echo = FALSE}
+```{r}
 head(data_nontidy)
 tail(data_nontidy)
 ```
@@ -59,11 +59,11 @@ In the skim, we saw that there is 15527 missing values for the column payor_grou
 ```{r}
 naniar::gg_miss_var(data_nontidy)
 ```
-**Tidying the data**
-To tidy the data, we wrote a pipe that:
-- Renames columns to not include "_" or "."
-- Separates age and gender into two columns
-- Separates subject into three columns; "ID", "first name", "surname"
+**Tidying the data**  
+To tidy the data, we wrote a pipe that:  
+- Renames columns to not include "_" or "."  
+- Separates age and gender into two columns  
+- Separates subject into three columns; "ID", "first name", "surname"  
 - Widens time.measurement to rec_ver_tat and col_rec_that
 ```{r}
 data_tidy<-
@@ -81,14 +81,15 @@ data_tidy<-
 ```
 When first running the code without distinct, there would be a warning message since there were a lot of duplicates. Distinct() selected only unique/distinct rows from the dataframe, and it is now 152 524 rows and 15 columns. 
 
-**Wrangling the data**
-After tidying, we wished to wrangle it to certain specifications. We individually wrote code to:
--Remove unnecessary columns: row, test_id and demo_group
--Change the variable types
--Create a new set of columns showing whether rec_ver_Tat is higher than 100 or not, showing pan_day in weeks, showing drive_thru_ind as Yes/No and showing the multiplication of ct_result and orderset for each person
--Set the order of columns as: id, age, gender and other columns
--Arrange ID column to increasing numbers
+**Wrangling the data**  
+After tidying, we wished to wrangle it to certain specifications. We individually wrote code to:  
+-Remove unnecessary columns: row, test_id and demo_group  
+-Change the variable types  
+-Create a new set of columns showing whether rec_ver_Tat is higher than 100 or not, showing pan_day in weeks, showing drive_thru_ind as Yes/No and showing the multiplication of ct_result and orderset for each person  
+-Set the order of columns as: id, age, gender and other columns  
+-Arrange ID column to increasing numbers  
 -Join an additional dataset to the main dataset
+
 
 We then took all our individual code and wrote a pipeline which could do all of this with our tidy data, creating a new data-set in the progress: data_wrangled
 ```{r}
@@ -235,6 +236,7 @@ ggplot(data_drivethrough, aes(x = gender, y = n))+
   facet_wrap(facets = vars(drive_thru_ind))+
   labs(fill = "Gender")
 ```
+  
 The plot shows that there are slightly more females than males that took the test at a drive through.
 
 *More tests in any sex groups*
