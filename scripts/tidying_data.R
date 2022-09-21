@@ -230,9 +230,17 @@ ttestresult %>%
   summary()
 
 
+ttestresult <-
+  data_wrangled %>% 
+  group_by(age, result) %>% 
+  mutate(age = log(age)) %>%
+  t.test(age~result, data = .)
+ttestresult
+
 ttestresult %>% 
   broom::tidy() #rectangular table in tibble form
-
+ 
+glimpse(data_wrangled)
 
 t.test(PVol~PreopTherapy, data = .) %>%  #how pvol changes considering preotherapy -> preotherapy has 2 categories
   broom::tidy()
@@ -259,7 +267,7 @@ lmfit <-
 as.factor(age)
 test<-
   data_wrangled %>% 
-  as.numeric("result")
+  mutate(as.numeric("result"))
 
 
 
