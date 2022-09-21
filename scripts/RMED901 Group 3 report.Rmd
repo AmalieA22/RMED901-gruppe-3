@@ -221,7 +221,9 @@ gender_payor_table <-
 
 **Plots**  
 We then made a set of plots to investigate some questions:  
+-If there were gender differences in frequency of test-taking at drive-through
 -If there were more tests in any of the sex groups
+- Ghazal's question - ADD
 
 EVERYONE SHOULD ADD THEIR PLOT TO THE LIST AND THEN WRITE ABOUT IT UNDER A SUBHEADER
 
@@ -261,6 +263,8 @@ ggplot(data = count_gender,
 ```
 
 This shows that there is a difference between men and women in number of tests, but that this difference is relatively small with women having slightly more tests.
+
+*GHAZAL -> ADD THE PLOT
 
 **Analysis**  
 We then analysed the dataset to investigate different questions:  
