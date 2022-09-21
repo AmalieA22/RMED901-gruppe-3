@@ -98,23 +98,13 @@ t.test(ct_result ~ result,
 #ANALYSIS 3
 
 #analyzing the data set to find out if there is an association between age of the individual and the test result
+#I will make a dataset without "invalid" in result and "NA" in result
+#This dataset should be more fitting. I will now recode results to positive=1 and negative=0
 data_wrangled %>% 
   subset(result != "invalid") %>% 
   mutate(result = if_else(result == "positive", 1, 0)) %>% 
   group_by(age, result) %>% 
   t.test(age ~ result, data = .)%>%
   broom::tidy()
-
-#I will make a dataset without "invalid" in result and "NA" in ct_result
-data_result_ct_analysis <-
-  data_wrangled %>%
-  subset(result != "invalid")
-
-data_result_ct_analysis 
-#This dataset should be more fitting. I will now recode results to positive=1 and negative=0
-data_result_ct_analysis_2 <- 
-  data_result_ct_analysis %>%
-  mutate(result = if_else(result == "positive", 1, 0))
-
 ttestresult %>%
   summary()
