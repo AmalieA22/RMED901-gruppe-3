@@ -224,7 +224,7 @@ ttestresult <-
   group_by(age, result) %>% 
   mutate(age = log(age)) %>%
   t.test(age~result, data = .)
-ANOVAresult
+ttestresult
 
 ttestresult %>%
   summary()
