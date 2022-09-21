@@ -89,6 +89,35 @@ data_result_ct_analysis_2 <-
 
 data_result_ct_analysis_2
 
-t.test(ct_result ~ result, data = data_result_ct_analysis_2)
+t.test(ct_result ~ result, 
+       data = data_result_ct_analysis_2)
 #the t-test found a statistically significant difference between positive and negative tests in ct_results
 #the positive group had a lower mean in ct_results
+
+#----------------------------#
+#ANALYSIS 3
+
+#analyzing the data set to find out if there is an association between age of the individual and the test result
+
+data_wrangled %>% 
+  subset(result != "invalid") %>% 
+  mutate(result = if_else(result == "positive", 1, 0)) %>% 
+  group_by(age, result) %>% 
+  mutate(age = log(age)) %>%
+  t.test(age ~ result, data = .)
+
+ttestresult
+
+#I will make a dataset without "invalid" in result and "NA" in ct_result
+data_result_ct_analysis <-
+  data_wrangled %>%
+  subset(result != "invalid")
+
+data_result_ct_analysis 
+#This dataset should be more fitting. I will now recode results to positive=1 and negative=0
+data_result_ct_analysis_2 <- 
+  data_result_ct_analysis %>%
+  mutate(result = if_else(result == "positive", 1, 0))
+
+ttestresult %>%
+  summary()
