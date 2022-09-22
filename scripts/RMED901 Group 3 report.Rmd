@@ -117,8 +117,20 @@ data_wrangled <-
 ```
 
 **Exploring the data**
-Ariell and Amalie should write about this
 
+In order to explore the wrangled data I am using the same functions used to explore previous data in this script. These functions are glimpse, head, tail and summary. 
+
+```{r}
+glimpse(data_wrangled)
+
+head(data_wrangled)
+
+tail(data_wrangled)
+
+summary(data_wrangled)
+```
+
+The exploration of the data shows that the data is much tidyer after the wrangling. Glimpse is showing the 18 columns in the dataset. However when you present it with the functions head and tail, it is easy to see what information belongs to which patient, and it is easy to interpret the dataset. 
 *Exploring the missing data*
 
 After exploring the data in data_wrangled, we wished to look at the missing data. To do this, we first used the gg_miss_var function.
