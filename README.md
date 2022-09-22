@@ -16,6 +16,6 @@ plotting_data.R creates 6 plots from data_wrangled. This corresponds to day 7 of
 
 analysis_of_data.R performs 4 analysis on data_wrangled. This corresponds to day 8 of the exam.
 
-full_script.R includes just about all the code we have written as part of the exam, including some of our trial and error to produce the pipelines.
+full_script.R includes just about all the code we have written as part of days 5 and 6 of the exam, including some of our trial and error to produce the pipelines. tidying_data.R was the original file we worked in, so if you are interested in the change log for the coding you have to through tidying_data.R
 
 For each day, and each script, we have divided the work into four roughly equal portions between the members of the group. When we were done individually we worked together to create pipelines and coherent presentations of our work.
