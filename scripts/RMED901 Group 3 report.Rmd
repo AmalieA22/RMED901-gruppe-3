@@ -281,6 +281,28 @@ ggplot(data = count_gender,
 
 This shows that there is a difference between men and women in number of tests, but that this difference is relatively small with women having slightly more tests.
 
+**Checking if the distributution of `ct_result` differ with `payor_group`?**
+We made a plot in order to see the distribution of ct_results within different payor_groups. 
+```{r}
+data_to_be_analyzed<-
+  data_wrangled %>%
+  count(payor_group,ct_result)
+
+comparing_payor_group_ct <-
+  data_to_be_analyzed %>% 
+  ggplot(aes(x=payor_group, y = ct_result)) + 
+  geom_boxplot(aes(fill=payor_group)) +
+  scale_fill_brewer(type="div",palette="GnBu")+
+  ylab("CT result") +
+  xlab("Payor group") +
+  theme_classic()
+
+comparing_payor_group_ct
+
+```
+
+This box plot displays the range and the median of ct_result in each group, and the boxplot displays that the distribution differ between the groups. 
+
 **Analysis**  
 We then analysed the dataset to investigate different questions:  
 -If there was a difference in distributions of CT results between outcome groups
