@@ -18,4 +18,8 @@ analysis_of_data.R performs 4 analysis on data_wrangled. This corresponds to day
 
 full_script.R includes just about all the code we have written as part of days 5 and 6 of the exam, including some of our trial and error to produce the pipelines. tidying_data.R was the original file we worked in, so if you are interested in the change log for the coding you have to through tidying_data.R
 
+
 For each day, and each script, we have divided the work into four roughly equal portions between the members of the group. When we were done individually we worked together to create pipelines and coherent presentations of our work.
+
+*An extra comment regarding the files:*
+We are aware that looking through the history of changes might be a bit of struggle, and we are sorry that the merges flipped around some stuff. If you look at an earlier file, commits made on the 15th of september or earlier (such as version 3c159e5) still contain most of the original code, with the "original" contributors. Merges done on the 21st and 22nd of september have shorter versions of the files.
