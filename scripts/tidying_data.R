@@ -128,7 +128,20 @@ data_wrangled <-
   arrange(id) %>% 
   inner_join(data_join)
 
+#Exploring the data 
 glimpse(data_wrangled)
+
+#This shows the 18 columns and the data in the columns. 
+
+head(data_wrangled)
+
+#When looking at this one can see the first 6 rows. Each row describes a patient, and the following columns is giving us info about them. 
+
+tail(data_wrangled)
+
+#Further exploring the data this shows the last 6 rows. This command is pretty much giving us the same info as the last one, but it looks the same, so that is good. 
+
+summary(data_wrangled)
 
 #EXPLORING MISSING DATA
 naniar::gg_miss_var(data_wrangled)

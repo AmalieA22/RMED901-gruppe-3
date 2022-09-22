@@ -89,25 +89,14 @@ data_result_ct_analysis_2 <-
 
 data_result_ct_analysis_2
 
-t.test(ct_result ~ result, 
-       data = data_result_ct_analysis_2)
+t.test(ct_result ~ result, data = data_result_ct_analysis_2)
 #the t-test found a statistically significant difference between positive and negative tests in ct_results
 #the positive group had a lower mean in ct_results
 
-#----------------------------#
-#ANALYSIS 3
-
-#analyzing the data set to find out if there is an association between age of the individual and the test result
-#I will make a dataset without "invalid" in result and "NA" in result
-#This dataset should be more fitting. I will now recode results to positive=1 and negative=0
-
-
-
-data_wrangled %>% 
-  subset(result != "invalid") %>% 
-  mutate(result = if_else(result == "positive", 1, 0)) %>% 
-  group_by(age, result) %>% 
-  t.test(age ~ result, data = .)%>%
+# Does the number of positive tests depend on the `pan_day`?
+#Simply put, does the number of positive tests depend on how long it has been since the pandemic started 
+lm(pan_day~result,data=data_wrangled) %>% 
   broom::tidy()
-ttestresult %>%
-  summary()
+
+#The p-value is 0.643 for positive results, which is above < 0.05, and therefore not significant.
+#The number of positive tests does therefore not depend on how long it had been since the pandemic. 
