@@ -1,8 +1,8 @@
 #----# SCRIPT HEADER #----------#
-# Date: 12/09/22
+# Date: 22/09/22
 # Author: Group 3
 # File name: tidying_data
-# Description: A script for tidying the exam dataset
+# Description: A script for tidying, wrangling and stratifying the exam dataset, corresponding to day 5 & 6
 #------------------------------#
 
 
@@ -43,6 +43,7 @@ naniar::gg_miss_var(data_nontidy)
 #We wrote a pipe that renames columns to not include space or "."
 #Separates age and gender into 2 columns and subject into "ID", "first name" and "surname"
 #Widens time.measurement to rec_ver_tat and col_rec_tat
+#Changes the type of variables for age, pan_day, drive_thru_ind, ct_result and ID to numeric
 data_tidy<-
   data_nontidy %>%
     rename(value=.value,
@@ -53,65 +54,31 @@ data_tidy<-
   separate(col = subject,
            into = c("id", "first_name", "last_name"),
            sep = " ") %>%
+  mutate(age = as.numeric(age),
+         pan_day = as.numeric(pan_day),
+         drive_thru_ind = as.numeric(drive_thru_ind),
+         ct_result = as.numeric(ct_result),
+         id = as.numeric(id)) %>%
     distinct() %>%
       pivot_wider(names_from = "time measurement", values_from = "value")
 #When first running the code without distinct, there would be a warning message since there were a lot of duplicates.
 #Distinct() selected only unique/distinct rows from the dataframe. It is now 152 524 rows and 15 columns.
 
-#Changing the type of variables for age, pan_day, drive_thru_ind, ct_result and ID to numeric
-data_tidy <-
-  data_tidy %>%
-  mutate(age = as.numeric(age),
-         pan_day = as.numeric(pan_day),
-         drive_thru_ind = as.numeric(drive_thru_ind),
-         ct_result = as.numeric(ct_result),
-         id = as.numeric(id))
-
 data_tidy
 glimpse(data_tidy)
 
-
-data_tidy <-
-  data_tidy %>% 
-  select(-row,-"1_test_id", -demo_group)
-
-#A column showing whether rec_ver_tat is higher than 100 or not: values High/Low
-data_tidy <-
-  data_tidy %>%
-  mutate(rec_ver_tat= if_else(rec_ver_tat>=100, "High", "Low"))
-
-#A numeric column showing pan_day in weeks
-data_tidy<-
-  data_tidy %>% 
-  mutate(pan_weeks = pan_day / 7)
-glimpse(data_tidy)
-
-#Wrote code for arranging the variables correctly and to arrange the table according to ID
-data_tidy <-
-  data_tidy %>%
-  select(c(id, age, gender), everything()) %>%
-  arrange(id)
-
-#New numeric column showing multiplication of ct_result and orderset for each person
-data_tidy <- 
-  data_tidy %>%
-  mutate(ct_order_result = ct_result * orderset)
-
-#New column showing drive_thru_ind as Yes/No
-data_tidy <- 
-  data_tidy %>%
-  mutate(drive_thru_ind = if_else(drive_thru_ind == 1, "Yes", "No"))
-  
-#Code to join data to the tidy data
+#Loading data to be joined to the main dataset:
 data_join <- read.delim(here("data", "copy_exam_joindata.txt"))
 
 
-data_joined <- 
-  data_tidy %>%
-  inner_join(data_join)
-
-#CREATING A PIPELINE for day 6
-
+#CREATING A PIPELINE for day 6 which:
+#Removes the "row", "1_test_id" and "demo_group" columns
+#Adds a column showing whether rec_ver_tat is higher than 100 or not: values High/Low
+#A numeric column showing pan_day in weeks
+#Arranges the variables correctly and to arrange the table according to ID
+#Adds a numeric column showing multiplication of ct_result and orderset for each person
+#Adds column showing drive_thru_ind as Yes/No
+#Joins the extra data to the tidy data
 data_wrangled <- 
   data_tidy %>% 
   select(-row,-"1_test_id", -demo_group) %>% 
@@ -119,11 +86,11 @@ data_wrangled <-
          pan_day = as.numeric(pan_day),
          drive_thru_ind = as.numeric(drive_thru_ind),
          ct_result = as.numeric(ct_result),
-         id = as.numeric(id)) %>% 
-  mutate(rec_ver_tat= if_else(rec_ver_tat>=100, "High", "Low")) %>% 
-  mutate(pan_weeks = pan_day / 7) %>% 
-  mutate(drive_thru_ind = if_else(drive_thru_ind == 1, "Yes", "No")) %>% 
-  mutate(ct_order_result = ct_result * orderset) %>% 
+         id = as.numeric(id),
+         rec_ver_tat= if_else(rec_ver_tat>=100, "High", "Low"),
+         pan_weeks = pan_day / 7,
+         drive_thru_ind = if_else(drive_thru_ind == 1, "Yes", "No"),
+         ct_order_result = ct_result * orderset) %>%
   select(c(id, age, gender), everything()) %>%
   arrange(id) %>% 
   inner_join(data_join)
@@ -207,41 +174,7 @@ data_wrangled %>%
   head()
 #There are no such individuals
 
-
-
-#Code to make a table from 2 categorical columns
+#Code to make a table from 2 categorical columns, in this case "gender" and "payor_group"
 gender_payor_table <- 
   data_wrangled %>%
   with(table(gender, payor_group))
-
-
-#create a plot that would help to find if the distribution of the ct_results differ with the sex group
-data_wrangled_grouped <- data_wrangled %>%
-  group_by(gender, ct_result) %>% 
-  summarise(sum = sum(ct_result, na.rm=T))
-data_wrangled_grouped
-
-ggplot(data_wrangled_grouped,  
-       aes(x = as.factor(gender), y = ct_result)) +
-  xlab("gender")+
-  ylab("distribution of ct_result")+
-  geom_boxplot(aes(fill=gender))
-
-#the box plots displays the range and the median of ct_result in each group
-
-
-#analyzing the data set to find out if there is an association between age of the individual and the test result
-
-ttestresult <-
-  data_wrangled %>% 
-  group_by(age, result) %>% 
-  mutate(age = log(age)) %>%
-  t.test(age~result, data = .)
-ttestresult
-
-ttestresult %>%
-  summary()
-
-
-
-
