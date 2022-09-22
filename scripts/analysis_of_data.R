@@ -9,7 +9,6 @@
 
 #------------------------------#
 #ANALYSIS 1
-
 #Are there more positive tests in the drive-through?
 
 #First, we count the number of positives test in the drive-through and elsewhere,
@@ -32,7 +31,6 @@ data_wrangled %>%
 
 #------------------------------#
 #ANALYSIS 2
-
 #Analysis to investigate if there is a difference in the distribution of ct_results between outcome groups
 
 #First looking at the variables in question
@@ -58,7 +56,6 @@ t.test(ct_result ~ result, data = data_result_ct_analysis_2)
 
 #---------------------------------#
 #ANALYSIS 3
-
 #Does the number of positive tests depend on the `pan_day`?
 #Simply put, does the number of positive tests depend on how long it has been since the pandemic started 
 lm(pan_day~result,data=data_wrangled) %>% 
@@ -70,9 +67,7 @@ lm(pan_day~result,data=data_wrangled) %>%
 
 #---------------------------------#
 #ANALYSIS 4
-
 #Analyzing the data set to find out if there is an association between age of the individual and the test result
-
 ttestresult <-
   data_wrangled %>% 
   group_by(age, result) %>% 

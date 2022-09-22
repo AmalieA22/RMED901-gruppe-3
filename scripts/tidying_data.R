@@ -5,14 +5,12 @@
 # Description: A script for tidying, wrangling and stratifying the exam dataset, corresponding to day 5 & 6
 #------------------------------#
 
-
-#Loading and reading a copy version of the data
-
+#Loading packages
 library(tidyverse)
 library(here)
 library(ggplot2)
 
-
+#Loading and reading a copy version of the data
 data_nontidy <- read_delim(here("data", "copy_exam_nontidy.txt"))
 
 data_nontidy
@@ -38,8 +36,7 @@ skimr::skim(data_nontidy)
 naniar::gg_miss_var(data_nontidy)
 #The plot shows that we are missing more than 15 000 values in payor_group and patient_class, and around 400 in ct_result
 
-
-#TIDYING THE DATA
+#TIDYING THE DATA ---- Day 5
 
 #We wrote a pipe that renames columns to not include space or "."
 #Separates age and gender into 2 columns and subject into "ID", "first name" and "surname"
@@ -72,6 +69,8 @@ glimpse(data_tidy)
 data_join <- read.delim(here("data", "copy_exam_joindata.txt"))
 
 
+#Wrangling the data --- Day 6
+
 #CREATING A PIPELINE for day 6 which:
 #Removes the "row", "1_test_id" and "demo_group" columns
 #Adds a column showing whether rec_ver_tat is higher than 100 or not: values High/Low
@@ -96,24 +95,22 @@ data_wrangled <-
   arrange(id) %>% 
   inner_join(data_join)
 
-#Exploring the data 
-glimpse(data_wrangled)
+#Exploring the data
 
+glimpse(data_wrangled)
 #This shows the 18 columns and the data in the columns. 
 
 head(data_wrangled)
-
 #When looking at this one can see the first 6 rows. Each row describes a patient, and the following columns is giving us info about them. 
 
 tail(data_wrangled)
-
 #Further exploring the data this shows the last 6 rows. This command is pretty much giving us the same info as the last one, but it looks the same, so that is good. 
 
-summary(data_wrangled)
-
 #EXPLORING MISSING DATA
+
 naniar::gg_miss_var(data_wrangled)
 #This returns more than 8000 missing values for payor_group and patient_class, and <500 for ct_result
+
 #Further exploring missing values in payor_group, patient_class and ct_result
 data_wrangled %>%
   filter(is.na(payor_group))%>%

@@ -10,11 +10,11 @@ They should be run in the given order, except for full_script.R
 
 You will also find a markdown report, detailing what we did, how we did it and why we did it for each script.
 
-tidying_data.R tidies and wrangles the data by removing unnessecary columns, making new values, joining the datasets and makes a dataset that can be analyzed and plotted called data_wrangled. We also do some stratifications and explore the data in this script. This corresponds to days 5 & 6 of the exam.
+tidying_data.R tidies and wrangles the data by removing unnessecary columns, making new values, joining the datasets and makes a dataset that can be analyzed and plotted called data_wrangled. We also do some stratifications and explore the data in this script. This corresponds to days 5 & 6 of the course.
 
-plotting_data.R creates a set of plots from data_wrangled. This corresponds to day 7 of the exam.
+plotting_data.R creates 6 plots from data_wrangled. This corresponds to day 7 of the course.
 
-analysis_of_data.R does a set of analysis on data_wrangled. This correspons to day 8 of the exam.
+analysis_of_data.R performs 4 analysis on data_wrangled. This corresponds to day 8 of the exam.
 
 full_script.R includes just about all the code we have written as part of the exam, including some of our trial and error to produce the pipelines.
 

@@ -2,14 +2,13 @@
 # Date: 15/09/22
 # Author: Group 3
 # File name: plotting_data
-# Description: A script for plotting the data
+# Description: A script for plotting the exam data (day 7)
 #------------------------------#
 
 #Before running this script, make sure to run tidying_data.R
 
 #----------------------------------------------#
 #PLOT 1
-
 #Were there more females than males that took the test at a drive through?
 data_drivethrough <- data_wrangled %>%
   count(gender, drive_thru_ind)
@@ -25,7 +24,6 @@ ggplot(data_drivethrough, aes(x = gender, y = n))+
 
 #----------------------------------------------#
 #PLOT 2
-
 #Plot to illustrate sex differences in testing
 count_gender <- 
   data_wrangled %>%
@@ -44,7 +42,6 @@ ggplot(data = count_gender,
 
 #----------------------------------------------#
 #PLOT 3
-
 #Plot to illustrate if time spent waiting for test results improves 
 #over the course of the pandemic
 ggplot(data = data_wrangled,
@@ -104,7 +101,6 @@ ggplot(data = col_week_data_8,
 
 #----------------------------------------------#
 #PLOT 4
-
 #create a plot that would help to find if the distribution of the ct_results differ with the sex group
 
 data_wrangled_grouped <- data_wrangled %>%
@@ -120,7 +116,6 @@ ggplot(data_wrangled_grouped,
 
 #----------------------------------------------#
 #PLOT 5
-
 #Does the distribution of the `ct_result` differ with `payor_group`?
 data_to_be_analyzed<-
   data_wrangled %>%
@@ -153,4 +148,3 @@ ggplot(data_wrangled_grouped,
   xlab("gender")+
   ylab("distribution of ct_result")+
   geom_boxplot(aes(fill=gender))
-
