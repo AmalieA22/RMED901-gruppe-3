@@ -379,7 +379,7 @@ lm(pan_day~result,data=data_wrangled) %>%
 The p-value is 0.643 for positive resukts, which is above < 0.05, and therefore not significant.The number of positive tests does therefore not depend on how long it had been since the pandemic. 
 
 *T-test to find out whether there is an association between age of the individual and the test result*  
-To do the t-test we first co removed "invalid" from results. We then coded the "positive" and "negative" in results as 1 and 0. We then performed the t-test.
+First, “invalid” was removed from the results. The "positive" and "negative" results were then coded as 1 and 0. Following that, a t-test was conducted.
 ```{r}
 data_wrangled %>% 
   subset(result != "invalid") %>% 
