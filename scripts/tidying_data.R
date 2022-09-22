@@ -10,6 +10,7 @@
 
 library(tidyverse)
 library(here)
+library(ggplot2)
 
 
 data_nontidy <- read_delim(here("data", "copy_exam_nontidy.txt"))

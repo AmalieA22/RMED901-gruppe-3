@@ -5,44 +5,7 @@
 # Description: A script for data analysis
 #------------------------------#
 
-#Loading packages
-library(ggplot2)
-library(tidyverse)
-library(here)
-
-#Reading the data from earlier script
-data_nontidy <- read_delim(here("data", "copy_exam_nontidy.txt"))
-
-data_tidy<-
-  data_nontidy %>%
-  rename(value=.value,
-         pan_day="pan day")%>%
-  separate(col = "gender-age",
-           into = c("gender", "age"),
-           sep = "-")%>%
-  separate(col = subject,
-           into = c("id", "first_name", "last_name"),
-           sep = " ") %>%
-  distinct() %>%
-  pivot_wider(names_from = "time measurement", values_from = "value")
-
-data_join <- read.delim(here("data", "copy_exam_joindata.txt"))
-
-data_wrangled <- 
-  data_tidy %>% 
-  select(-row,-"1_test_id", -demo_group) %>% 
-  mutate(age = as.numeric(age),
-         pan_day = as.numeric(pan_day),
-         drive_thru_ind = as.numeric(drive_thru_ind),
-         ct_result = as.numeric(ct_result),
-         id = as.numeric(id)) %>% 
-  mutate(rec_ver_tat= if_else(rec_ver_tat>=100, "High", "Low")) %>% 
-  mutate(pan_weeks = pan_day / 7) %>% 
-  mutate(drive_thru_ind = if_else(drive_thru_ind == 1, "Yes", "No")) %>% 
-  mutate(ct_order_result = ct_result * orderset) %>% 
-  select(c(id, age, gender), everything()) %>%
-  arrange(id) %>% 
-  left_join(data_join)
+#Before running this script, make sure to run tidying_data.R
 
 #------------------------------#
 #ANALYSIS 1
@@ -93,10 +56,29 @@ t.test(ct_result ~ result, data = data_result_ct_analysis_2)
 #the t-test found a statistically significant difference between positive and negative tests in ct_results
 #the positive group had a lower mean in ct_results
 
-# Does the number of positive tests depend on the `pan_day`?
+#---------------------------------#
+#ANALYSIS 3
+
+#Does the number of positive tests depend on the `pan_day`?
 #Simply put, does the number of positive tests depend on how long it has been since the pandemic started 
 lm(pan_day~result,data=data_wrangled) %>% 
   broom::tidy()
 
 #The p-value is 0.643 for positive results, which is above < 0.05, and therefore not significant.
 #The number of positive tests does therefore not depend on how long it had been since the pandemic. 
+
+
+#---------------------------------#
+#ANALYSIS 4
+
+#Analyzing the data set to find out if there is an association between age of the individual and the test result
+
+ttestresult <-
+  data_wrangled %>% 
+  group_by(age, result) %>% 
+  mutate(age = log(age)) %>%
+  t.test(age~result, data = .)
+ttestresult
+
+ttestresult %>%
+  summary()

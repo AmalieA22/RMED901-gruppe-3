@@ -5,44 +5,7 @@
 # Description: A script for plotting the data
 #------------------------------#
 
-#Loading packages
-library(ggplot2)
-library(tidyverse)
-library(here)
-
-#Reading the data from earlier script
-data_nontidy <- read_delim(here("data", "copy_exam_nontidy.txt"))
-
-data_tidy<-
-  data_nontidy %>%
-  rename(value=.value,
-         pan_day="pan day")%>%
-  separate(col = "gender-age",
-           into = c("gender", "age"),
-           sep = "-")%>%
-  separate(col = subject,
-           into = c("id", "first_name", "last_name"),
-           sep = " ") %>%
-  distinct() %>%
-  pivot_wider(names_from = "time measurement", values_from = "value")
-
-data_join <- read.delim(here("data", "copy_exam_joindata.txt"))
-
-data_wrangled <- 
-  data_tidy %>% 
-  select(-row,-"1_test_id", -demo_group) %>% 
-  mutate(age = as.numeric(age),
-         pan_day = as.numeric(pan_day),
-         drive_thru_ind = as.numeric(drive_thru_ind),
-         ct_result = as.numeric(ct_result),
-         id = as.numeric(id)) %>% 
-  mutate(rec_ver_tat= if_else(rec_ver_tat>=100, "High", "Low")) %>% 
-  mutate(pan_weeks = pan_day / 7) %>% 
-  mutate(drive_thru_ind = if_else(drive_thru_ind == 1, "Yes", "No")) %>% 
-  mutate(ct_order_result = ct_result * orderset) %>% 
-  select(c(id, age, gender), everything()) %>%
-  arrange(id) %>% 
-  left_join(data_join)
+#Before running this script, make sure to run tidying_data.R
 
 #----------------------------------------------#
 #PLOT 1
