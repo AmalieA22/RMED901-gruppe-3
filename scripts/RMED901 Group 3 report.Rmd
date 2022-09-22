@@ -337,3 +337,14 @@ data_wrangled %>%
   t.test(ct_result ~ result, data = .)
 ```
 We find that there is a statistically significant difference between the two groups, with the group with negative tests having a much higher CT score.
+
+*Does the number of positive tests depend on the pan_day?*
+
+Simply put, does the number of positive tests depend on how long it has been since the pandemic started. In order to check this we used the lm formula, which is used for linear models. 
+
+```{r}
+lm(pan_day~result,data=data_wrangled) %>% 
+  broom::tidy()
+```
+
+The p-value is 0.643 for positive resukts, which is above < 0.05, and therefore not significant.The number of positive tests does therefore not depend on how long it had been since the pandemic. 
