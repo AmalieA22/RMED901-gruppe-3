@@ -200,7 +200,14 @@ We then stratified the data and reported min, max, mean and sd of a numeric colu
 -Only for those who did not get drive through testing and had a CT result lower than 35 
 
 *Only inpatients*
-Ariell write this
+Since we needed a numeric column we used age to check the min, max, mean and sd. 
+
+```{r}
+data_wrangled %>%
+  group_by(patient_class =="inpatient") %>%
+  summarize(min(age, na.rm = T),max(age, na.rm = T),mean(age, na.rm = T), sd(age, na.rm = T))
+```
+
 *CT result equal to 45*
 Ghazal write this
 
