@@ -209,7 +209,13 @@ data_wrangled %>%
 ```
 
 *CT result equal to 45*
-Ghazal write this
+This code stratifies the data set based on ct_results equal to 45. The data was summarized based on the minimum, maximum, mean, and standard deviation of the pan_day.
+```{r}
+data_wrangled %>%
+  filter(ct_result==45) %>% 
+  summarize(min(pan_day, na.rm = T), max(pan_day, na.rm = T), mean(pan_day, na.rm = T), sd(pan_day, na.rm = T))
+```
+
 
 *Tested after day 50*  
 Here we have chosen age as the numeric column to check min, max, mean and sd.
@@ -240,7 +246,9 @@ gender_payor_table <-
 
 **Plots**  
 We then made a set of plots to investigate some questions:  
+-If there were gender differences in frequency of test-taking at drive-through
 -If there were more tests in any of the sex groups
+-If the distribution of ct_results differ with the sex groups
 
 EVERYONE SHOULD ADD THEIR PLOT TO THE LIST AND THEN WRITE ABOUT IT UNDER A SUBHEADER
 
@@ -281,6 +289,26 @@ ggplot(data = count_gender,
 
 This shows that there is a difference between men and women in number of tests, but that this difference is relatively small with women having slightly more tests.
 
+*Distribution of ct_result in sex groups*  
+This plot helps to determine whether there is a difference in the distribution of ct_results based on gender.
+```{r}
+data_wrangled_grouped <- data_wrangled %>%
+  group_by(gender, ct_result) %>% 
+  summarise(sum = sum(ct_result, na.rm=T))
+data_wrangled_grouped
+
+ggplot(data_wrangled_grouped,  
+       aes(x = as.factor(gender), y = ct_result)) +
+  xlab("gender")+
+  ylab("distribution of ct_result")+
+  geom_boxplot(aes(fill=gender))
+
+```
+
+The box plots display the range and the median of ct_result in each group. 
+Compared to women, men have a broader range of ct_results. Although the highest number of ct_results belongs to women, the median is higher in men.
+
+
 **Checking if the distributution of `ct_result` differ with `payor_group`?**
 We made a plot in order to see the distribution of ct_results within different payor_groups. 
 ```{r}
@@ -302,6 +330,9 @@ comparing_payor_group_ct
 ```
 
 This box plot displays the range and the median of ct_result in each group, and the boxplot displays that the distribution differ between the groups. 
+
+=======
+
 
 **Analysis**  
 We then analysed the dataset to investigate different questions:  
@@ -348,3 +379,18 @@ lm(pan_day~result,data=data_wrangled) %>%
 ```
 
 The p-value is 0.643 for positive resukts, which is above < 0.05, and therefore not significant.The number of positive tests does therefore not depend on how long it had been since the pandemic. 
+
+
+*T-test to find out whether there is an association between age of the individual and the test result*  
+First, “invalid” was removed from the results. The "positive" and "negative" results were then coded as 1 and 0. Following that, a t-test was conducted.
+```{r}
+data_wrangled %>% 
+  subset(result != "invalid") %>% 
+  mutate(result = if_else(result == "positive", 1, 0)) %>% 
+  group_by(age, result) %>% 
+  t.test(age ~ result, data = .)%>%
+  broom::tidy()
+
+```
+The p.value is higher than 0.05, the result is insignificant.
+
