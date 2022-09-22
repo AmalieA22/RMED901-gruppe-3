@@ -2,51 +2,13 @@
 # Date: 15/09/22
 # Author: Group 3
 # File name: plotting_data
-# Description: A script for plotting the data
+# Description: A script for plotting the exam data (day 7)
 #------------------------------#
 
-#Loading packages
-library(ggplot2)
-library(tidyverse)
-library(here)
-
-#Reading the data from earlier script
-data_nontidy <- read_delim(here("data", "copy_exam_nontidy.txt"))
-
-data_tidy<-
-  data_nontidy %>%
-  rename(value=.value,
-         pan_day="pan day")%>%
-  separate(col = "gender-age",
-           into = c("gender", "age"),
-           sep = "-")%>%
-  separate(col = subject,
-           into = c("id", "first_name", "last_name"),
-           sep = " ") %>%
-  distinct() %>%
-  pivot_wider(names_from = "time measurement", values_from = "value")
-
-data_join <- read.delim(here("data", "copy_exam_joindata.txt"))
-
-data_wrangled <- 
-  data_tidy %>% 
-  select(-row,-"1_test_id", -demo_group) %>% 
-  mutate(age = as.numeric(age),
-         pan_day = as.numeric(pan_day),
-         drive_thru_ind = as.numeric(drive_thru_ind),
-         ct_result = as.numeric(ct_result),
-         id = as.numeric(id)) %>% 
-  mutate(rec_ver_tat= if_else(rec_ver_tat>=100, "High", "Low")) %>% 
-  mutate(pan_weeks = pan_day / 7) %>% 
-  mutate(drive_thru_ind = if_else(drive_thru_ind == 1, "Yes", "No")) %>% 
-  mutate(ct_order_result = ct_result * orderset) %>% 
-  select(c(id, age, gender), everything()) %>%
-  arrange(id) %>% 
-  left_join(data_join)
+#Before running this script, make sure to run tidying_data.R
 
 #----------------------------------------------#
 #PLOT 1
-
 #Were there more females than males that took the test at a drive through?
 data_drivethrough <- data_wrangled %>%
   count(gender, drive_thru_ind)
@@ -62,7 +24,6 @@ ggplot(data_drivethrough, aes(x = gender, y = n))+
 
 #----------------------------------------------#
 #PLOT 2
-
 #Plot to illustrate sex differences in testing
 count_gender <- 
   data_wrangled %>%
@@ -81,7 +42,6 @@ ggplot(data = count_gender,
 
 #----------------------------------------------#
 #PLOT 3
-
 #Plot to illustrate if time spent waiting for test results improves 
 #over the course of the pandemic
 ggplot(data = data_wrangled,
@@ -141,7 +101,6 @@ ggplot(data = col_week_data_8,
 
 #----------------------------------------------#
 #PLOT 4
-
 #create a plot that would help to find if the distribution of the ct_results differ with the sex group
 
 data_wrangled_grouped <- data_wrangled %>%
@@ -157,7 +116,6 @@ ggplot(data_wrangled_grouped,
 
 #----------------------------------------------#
 #PLOT 5
-
 #Does the distribution of the `ct_result` differ with `payor_group`?
 data_to_be_analyzed<-
   data_wrangled %>%
@@ -190,4 +148,3 @@ ggplot(data_wrangled_grouped,
   xlab("gender")+
   ylab("distribution of ct_result")+
   geom_boxplot(aes(fill=gender))
-
